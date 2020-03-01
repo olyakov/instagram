@@ -24,7 +24,8 @@ namespace Instagram.Services
 
         public Post GetById(int id)
         {
-            return _ctx.Posts.Find(id);
+            return GetAll().Where(p => p.Id == id)
+                .First();
         }
 
         public IEnumerable<Post> GetWithTag(string tag)

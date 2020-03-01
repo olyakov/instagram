@@ -30,5 +30,23 @@ namespace Instagram.Controllers
 
             return View(model);
         }
+
+        public IActionResult Detail(int id)
+        {
+            var post = _postService.GetById(id);
+
+            var model = new GalleryDetailModel()
+            {
+                Id = post.Id,
+                Title = post.Title,
+                Created = post.Created,
+                Likes = post.Likes,
+                Dislikes = post.Dislikes,
+                Url = post.Url,
+                Tags = post.Tags.Select(t => t.Title).ToList()
+                
+            };
+            return View(model);
+        }
     }
 }
