@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Instagram.Data\Instagram.Data.csproj" />
+    <ProjectReference Include="..\Instagram.Services\Instagram.Services.csproj" />
   </ItemGroup>
 
 </Project>
