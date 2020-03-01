@@ -1,0 +1,12 @@
+﻿@model Instagram.Models.GalleryIndexModel
+
+<div class="conteiner body-content">
+    <div class="row gallery-content">
+        @foreach (var post in Model.Posts)
+        {
+            <div class="gallery-post-container">
+                <div class="gallery-post" style="background-image: url(@post.Url)"></div>
+            </div>
+        }
+    </div>
+</div>
