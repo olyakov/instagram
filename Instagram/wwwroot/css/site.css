@@ -23,6 +23,53 @@ for details on configuring this project to bundle and minify static web assets. 
     box-shadow: 0 10px 18px rgba(0,0,0,0.2), 0 5px 5px rgba(0,0,0,0.2);
 }
 
+ .post-detail-cotainer {
+     text-align: left;
+ }
+
+ .post-detail {
+     padding: 12px;
+     border-radius: 2px;
+ }
+
+ .post-detail-meta {
+     padding: 12px;
+ }
+
+ .submit {
+     padding: 2%;
+ }
+ 
+ .btn-file {
+     margin: 6px;
+ }
+
+ #upload-form {
+     padding: 60px;
+     margin: auto;
+     width: 50%;
+ }
+
+ .upload-container {
+     padding: 2%;
+ }
+
+.drop-shadow {
+    box-shadow: 0 10px 18px rgba(0,0,0,0.2), 0 5px 5px rgba(0,0,0,0.2);
+}
+
+.red-heart { color: #e74c3c; }
+
+.gray-comment {
+    color: #353b48;
+}
+
+.blk-btn { color: black; }
+
+.lg-heart { font-size: 1.8em; }
+
+.lg-commets { font-size: 1.6em; }
+
 body {
     padding-top: 50px;
     padding-bottom: 20px;
