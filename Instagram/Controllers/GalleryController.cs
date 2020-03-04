@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Instagram.Data;
-using Instagram.Data.Model;
+﻿using Instagram.Data;
 using Instagram.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace Instagram.Controllers
 {

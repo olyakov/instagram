@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Instagram.Models;
 using Microsoft.AspNetCore.Mvc;
-using Instagram.Models;
+using System.Diagnostics;
 
 namespace Instagram.Controllers
 {
