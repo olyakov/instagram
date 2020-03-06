@@ -29,6 +29,13 @@ namespace Instagram.Services
                 .First();
         }
 
+        public void DeleteById(int id)
+        {
+            var del_post = GetAll().Where(p => p.Id == id).First();
+            _ctx.Posts.Remove(del_post);
+            _ctx.SaveChanges();
+        }
+
         public IEnumerable<Post> GetWithTag(string tag)
         {
             return GetAll().Where(post
