@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <UserSecretsId>aspnet-Instagram-0E3FF977-0634-49BB-9A18-A3B0CFC46ECA</UserSecretsId>
+    <UserSecretsId>aspnet-Instagram-9297D3DC-FB38-4569-9082-BFB92B6A4F66</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +12,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Instagram.Data\Instagram.Data.csproj" />
-    <ProjectReference Include="..\Instagram.Services\Instagram.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Identity\Services\" />
   </ItemGroup>
 
 </Project>

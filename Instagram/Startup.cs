@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Instagram.Data;
+using Instagram.Data.Model;
+using Instagram.Services;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Instagram.Data;
-using Instagram.Services;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;   
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Instagram
@@ -35,17 +32,25 @@ namespace Instagram
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            // services.AddDbContext<InstagramDbContext>()
-            services.AddDbContext<InstagramDbContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            // services.AddDbContext<InstagramDbContext>()
+            services.AddDbContext<InstagramDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<IdentityDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<AspNetUsers, IdentityRole>(options =>
+                {
+                    options.User.RequireUniqueEmail = false;
+                })
+                .AddEntityFrameworkStores<IdentityDbContext>()
+                .AddDefaultTokenProviders();
+
 
             services.AddScoped<IPost, PostServices>();
+            services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

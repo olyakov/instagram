@@ -20,42 +20,41 @@ for details on configuring this project to bundle and minify static web assets. 
     width: 300px;
     height: 300px;
     position: relative;
-    box-shadow: 0 10px 18px rgba(0,0,0,0.2), 0 5px 5px rgba(0,0,0,0.2);
 }
 
- .post-detail-cotainer {
-     text-align: left;
- }
+.post-detail-cotainer {
+    text-align: left;
+}
 
- .post-detail {
-     padding: 12px;
-     border-radius: 2px;
- }
+.post-detail {
+    padding: 12px;
+    border-radius: 2px;
+}
 
- .post-detail-meta {
-     padding: 12px;
- }
+.post-detail-meta {
+    padding: 12px;
+}
 
- .submit {
-     padding: 2%;
- }
+.submit {
+    padding: 2%;
+}
  
- .btn-file {
-     margin: 6px;
- }
+.btn-file {
+    margin: 6px;
+}
 
- #upload-form {
-     padding: 60px;
-     margin: auto;
-     width: 50%;
- }
+#upload-form {
+    padding: 60px;
+    margin: auto;
+    width: 50%;
+}
 
- .upload-container {
-     padding: 2%;
- }
+.upload-container {
+    padding: 2%;
+}
 
 .drop-shadow {
-    box-shadow: 0 10px 18px rgba(0,0,0,0.2), 0 5px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 5px 5px rgba(0,0,0,0.2), 0 5px 5px rgba(0,0,0,0.2);
 }
 
 .red-heart { color: #e74c3c; }
