@@ -1,6 +1,10 @@
 ﻿using Instagram.Data;
+using Instagram.Data.Model;
 using Instagram.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System.Linq;
 
 namespace Instagram.Controllers
@@ -8,6 +12,7 @@ namespace Instagram.Controllers
     public class GalleryController : Controller
     {
         private readonly IPost _postService;
+        
 
         public GalleryController(IPost postService)
         {
@@ -16,7 +21,7 @@ namespace Instagram.Controllers
 
         public IActionResult Index()
         {
-            var postList = _postService.GetAll();
+            var postList = _postService.GetAll();   
 
             var model = new GalleryIndexModel()
             {
@@ -35,8 +40,6 @@ namespace Instagram.Controllers
                 Id = post.Id,
                 Title = post.Title,
                 Created = post.Created,
-                Likes = post.Likes,
-                Dislikes = post.Dislikes,
                 Url = post.Url,
                 Tags = post.Tags.Select(t => t.Title).ToList()
                 

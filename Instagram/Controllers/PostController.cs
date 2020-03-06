@@ -27,6 +27,11 @@ namespace Instagram.Controllers
             return View(model);
         }
 
+        public IActionResult SetLike()
+        {
+            return Ok();
+        }
+
         [HttpPost]
         public async Task<IActionResult> UploadNewPost(IFormFile pic, string tags, string title)
         {
@@ -34,7 +39,7 @@ namespace Instagram.Controllers
             {
                 var filename = Path.Combine(_he.WebRootPath, Path.GetFileName(pic.FileName));
                 pic.CopyTo(new FileStream(filename, FileMode.Create));
-                await _postService.SetPost(title, tags, "/"+Path.GetFileName(pic.FileName));
+                await _postService.AddPost(title, tags, "/"+Path.GetFileName(pic.FileName));
             }
             return RedirectToAction("Index", "Gallery");
         }

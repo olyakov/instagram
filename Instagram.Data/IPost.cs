@@ -11,7 +11,9 @@ namespace Instagram.Data
         IEnumerable<Post> GetAll();
         IEnumerable<Post> GetWithTag(string tag);
         Post GetById(int id);
-        Task SetPost(string title, string tags, string url);
+        void DeleteById(int id);
+        void SetLike(int postId);
+        Task AddPost(string title, string tags, string url);
         List<Tag> ParseTags(string tags);
     }
 }
