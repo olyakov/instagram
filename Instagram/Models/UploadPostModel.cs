@@ -7,6 +7,5 @@ namespace Instagram.Models
         public string Title { get; set; }
         public string Tags { get; set; }
         public IFormFile ImageUpload { get; set; }
-
     }
 }
