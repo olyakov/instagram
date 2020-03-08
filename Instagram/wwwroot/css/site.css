@@ -32,6 +32,7 @@ for details on configuring this project to bundle and minify static web assets. 
 }
 
 .post-detail-meta {
+    text-align: right;
     padding: 12px;
 }
 
