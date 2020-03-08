@@ -18,6 +18,9 @@ namespace Instagram.Data.Model
         [StringLength(255)]
         public string Title { get; set; }
 
+        [StringLength(2000)]
+        public string Description { get; set; }
+
         public DateTime Created{ get; set; }
 
         [Required]
