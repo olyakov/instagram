@@ -1,4 +1,5 @@
-﻿using Instagram.Data;
+﻿using System.Collections.Generic;
+using Instagram.Data;
 using Instagram.Data.Model;
 using Instagram.Models;
 using Microsoft.AspNetCore.Identity;
@@ -28,7 +29,6 @@ namespace Instagram.Controllers
             
             var postList = _postService.GetAll(username);
             
-
             var model = new GalleryIndexModel()
             {
                 Posts = postList
@@ -47,8 +47,10 @@ namespace Instagram.Controllers
                 Title = post.Title,
                 Created = post.Created,
                 Url = post.Url,
-                Tags = post.Tags.Select(t => t.Title).ToList()
-                
+                Tags = post.Tags.Select(t => t.Title).ToList(),
+                Likes = post.Likes == null ? new List<AspNetUsers>() : post.Likes.Select(l => l.Users).ToList(),
+                Dislikes = post.Dislikes == null ? new List<AspNetUsers>() : post.Dislikes.Select(l => l.Users).ToList(),
+                Comments = post.Comments == null ? new List<Comment>() : post.Comments.ToList()
             };
             return View(model);
         }

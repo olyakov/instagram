@@ -14,8 +14,9 @@ namespace Instagram.Models
         public string Url { get; set; }
 
         public List<string> Tags { get; set; }
-        public List<Like> Likes { get; set; }
-        public List<Dislike> Dislikes { get; set; }
+        public List<AspNetUsers> Likes { get; set; }
+        public List<AspNetUsers> Dislikes { get; set; }
+        public List<Comment> Comments { get; set; }
         
     }
 }

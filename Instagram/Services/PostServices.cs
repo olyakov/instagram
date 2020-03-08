@@ -41,7 +41,7 @@ namespace Instagram.Services
             }
             
             return _ctx.Posts
-                .Where(p => p.UserId == userId)
+               // .Where(p => p.UserId == userId)
                 .Include(post => post.Tags);
         }
 
@@ -81,7 +81,10 @@ namespace Instagram.Services
                 Tags = ParseTags(tags),
                 Created = DateTime.Now,
                 Url = url,
-                UserId = userId
+                UserId = userId,
+                Likes = new List<Like>(),
+                Dislikes = new List<Dislike>(),
+                Comments = new List<Comment>()
             };
             _ctx.Posts.Add(post);
             await _ctx.SaveChangesAsync();
@@ -104,8 +107,7 @@ namespace Instagram.Services
             Like like = new Like()
             {
                 UserId = userId
-
-            };
+                };
             if (GetById(postId).Likes
                     .Where(l => l.UserId == userId) != null)
             {
