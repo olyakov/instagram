@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Instagram.Controllers
 {
@@ -19,9 +21,13 @@ namespace Instagram.Controllers
             _postService = postService;
         }
 
-        public IActionResult Index()
+
+        [Route("/{username?}")]
+        public IActionResult Index(string username)
         {
-            var postList = _postService.GetAll();   
+            
+            var postList = _postService.GetAll(username);
+            
 
             var model = new GalleryIndexModel()
             {

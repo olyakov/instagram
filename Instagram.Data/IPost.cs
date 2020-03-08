@@ -8,7 +8,7 @@ namespace Instagram.Data
 {
     public interface IPost
     {
-        IEnumerable<Post> GetAll();
+        IEnumerable<Post> GetAll(string userId);
         IEnumerable<Post> GetWithTag(string tag);
         Post GetById(int id);
         void DeleteById(int id);

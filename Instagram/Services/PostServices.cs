@@ -17,18 +17,29 @@ namespace Instagram.Services
 
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly InstagramDbContext _ctx;
+        private readonly IdentityDbContext _userCtx;
         private readonly UserManager<AspNetUsers> _userManager;
 
-        public PostServices(InstagramDbContext ctx, UserManager<AspNetUsers> userManager, IHttpContextAccessor httpContextAccessor)
+        public PostServices(InstagramDbContext ctx, IdentityDbContext userCtx, UserManager<AspNetUsers> userManager, IHttpContextAccessor httpContextAccessor)
         {
             _ctx = ctx;
+            _userCtx = userCtx;
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public IEnumerable<Post> GetAll()
+        public IEnumerable<Post> GetAll(string _username)
         {
-            string userId =  ActionWithUser.GetCurrentUserAsync(_httpContextAccessor, _userManager).Result;
+            string userId;
+            if (_username == null)
+            {
+                userId = ActionWithUser.GetCurrentUserAsync(_httpContextAccessor, _userManager).Result.Id;
+            }
+            else
+            {
+                userId = _userCtx.ApplicationUsers.Where(u => u.UserName == _username).First().Id;
+            }
+            
             return _ctx.Posts
                 .Where(p => p.UserId == userId)
                 .Include(post => post.Tags);
@@ -36,24 +47,23 @@ namespace Instagram.Services
 
         public Post GetById(int id)
         {
-            return GetAll().Where(p => p.Id == id)
+            return GetAll(null).Where(p => p.Id == id)
                 .First();
         }
 
         public void DeleteById(int id)
         {
-            var del_post = GetAll().Where(p => p.Id == id).First();
+            var del_post = GetAll(null).Where(p => p.Id == id).First();
             if (del_post != null)
             {
                 _ctx.Posts.Remove(del_post);
                 _ctx.SaveChanges();
             }
-
         }
 
         public IEnumerable<Post> GetWithTag(string tag)
         {
-            return GetAll().Where(post
+            return GetAll(null).Where(post
                 => post.Tags
                     .Any(t => t.Title == tag));
         }
@@ -90,7 +100,7 @@ namespace Instagram.Services
 
         public void SetLike(int postId)
         {
-            string userId = ActionWithUser.GetCurrentUserAsync(_httpContextAccessor, _userManager).Result;
+            string userId = ActionWithUser.GetCurrentUserAsync(_httpContextAccessor, _userManager).Result.Id;
             Like like = new Like()
             {
                 UserId = userId
@@ -106,7 +116,6 @@ namespace Instagram.Services
                 _ctx.Likes.Add(like);
             }
             _ctx.SaveChanges();
-
         }
     }
 }
