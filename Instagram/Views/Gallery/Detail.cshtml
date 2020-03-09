@@ -1,4 +1,5 @@
-﻿@using Microsoft.CodeAnalysis.CSharp.Syntax
+﻿@using Instagram.Controllers
+@using Microsoft.CodeAnalysis.CSharp.Syntax
 @model Instagram.Models.GalleryDetailModel
 
 
@@ -18,21 +19,23 @@
         <p>
             @Model.Description
         </p>
+
+
         <div class="row post-detail-meta">
 
-            @if (true)
+            @if (@Model.IsSetLike)
             {
-                <a href="#" style="color: black">
-                    <span class="glyphicon glyphicon-heart red-heart lg-heart"></span>
+                <a style="color: black">
+                    <span data-post-id="@Model.Id" class="glyphicon glyphicon-heart red-heart lg-heart js-toggle"></span>
                 </a>
             }
             else
             {
-                <a href="#" style="color: black">
-                    <span class="glyphicon glyphicon-heart-empty lg-heart"></span>
+                <a style="color: black">
+                    <span data-post-id="@Model.Id" class="glyphicon glyphicon-heart-empty lg-heart js-toggle"></span>
                 </a>
             }
-            <span  style="font-weight:bold">@Model.Likes.Count likes</span>
+            <span style="font-weight:bold">@Model.Likes.Count likes</span>
             <a href="#" style="color: black">
                 <span class="glyphicon glyphicon-comment gray-comment lg-commets"></span>
             </a>
@@ -49,3 +52,16 @@
     </div>
 
 </div>
+
+@section scripts
+    {
+    <script>
+        $(document).ready(function () {
+            $(".js-toggle").click(function (e) {
+                var id = $(e.target).attr("data-post-id");
+                $.post("/Post/SetLike", { postId: id })
+                    .done(() => window.location.href = "/Gallery/Detail/" + id);
+            });
+        });
+    </script>
+}
