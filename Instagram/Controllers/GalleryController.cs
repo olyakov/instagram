@@ -12,6 +12,7 @@ using System.Security.Claims;
 
 namespace Instagram.Controllers
 {
+    [Authorize("/Identity/Account/Login")]
     public class GalleryController : Controller
     {
         private readonly IPost _postService;
@@ -40,17 +41,19 @@ namespace Instagram.Controllers
         public IActionResult Detail(int id)
         {
             var post = _postService.GetById(id);
-
+            var pam = post.Likes == null ? new List<Like>() : post.Likes.ToList();
             var model = new GalleryDetailModel()
             {
                 Id = post.Id,
                 Title = post.Title,
+                Description = post.Description,
                 Created = post.Created,
                 Url = post.Url,
                 Tags = post.Tags.Select(t => t.Title).ToList(),
-                Likes = post.Likes == null ? new List<AspNetUsers>() : post.Likes.Select(l => l.Users).ToList(),
-                Dislikes = post.Dislikes == null ? new List<AspNetUsers>() : post.Dislikes.Select(l => l.Users).ToList(),
-                Comments = post.Comments == null ? new List<Comment>() : post.Comments.ToList()
+                Likes = pam,
+                Dislikes = post.Dislikes == null ? new List<Dislike>() : post.Dislikes.ToList(),
+                Comments = post.Comments == null ? new List<Comment>() : post.Comments.ToList(),
+                IsSetLike = post.Likes == null ? false : !post.Likes.Any(l => l.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value) ? false : true
             };
             return View(model);
         }

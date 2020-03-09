@@ -7,18 +7,28 @@ using System.Threading.Tasks;
 using Instagram.Data;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using System.Net;
+using Instagram.Services;
+using System.Security.Claims;
 
 namespace Instagram.Controllers
 {
+    public class LikeDto
+    {
+        public int PostId { get; set; }
+    }
+
     public class PostController : Controller
     {
         private readonly IPost _postService;
+        private readonly IRaiting _raitingService;
         private readonly IHostingEnvironment _he;
 
-        public PostController(IPost postService, IHostingEnvironment he)
+        public PostController(IPost postService, IRaiting raitingService, IHostingEnvironment he)
         {
             _he = he;
             _postService = postService;
+            _raitingService = raitingService;
         }
 
         public IActionResult Upload()
@@ -27,19 +37,23 @@ namespace Instagram.Controllers
             return View(model);
         }
 
-        public IActionResult SetLike()
+        [HttpPost]
+        public async Task<IActionResult> SetLike(LikeDto dto)
         {
+            var post = _postService.GetById(dto.PostId);
+            var user  = User.FindFirst(ClaimTypes.Name).Value;
+            await _raitingService.SetLike(post, user);
             return Ok();
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadNewPost(IFormFile pic, string tags, string title)
+        public async Task<IActionResult> UploadNewPost(IFormFile pic, string tags, string description, string title)
         {
             if (pic != null)
             {
                 var filename = Path.Combine(_he.WebRootPath, Path.GetFileName(pic.FileName));
                 pic.CopyTo(new FileStream(filename, FileMode.Create));
-                await _postService.AddPost(title, tags, "/"+Path.GetFileName(pic.FileName));
+                await _postService.AddPost(title, tags, description, "/"+Path.GetFileName(pic.FileName));
             }
             return RedirectToAction("Index", "Gallery");
         }

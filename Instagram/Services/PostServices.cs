@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Instagram.Services
 {
-   
+
     public class PostServices : IPost
     {
 
@@ -27,8 +27,8 @@ namespace Instagram.Services
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
         }
-
-        public IEnumerable<Post> GetAll(string _username)
+        [Authorize]
+        public IEnumerable<Post> GetAll(string _username = null)
         {
             string userId;
             if (_username == null)
@@ -37,23 +37,23 @@ namespace Instagram.Services
             }
             else
             {
-                userId = _userCtx.ApplicationUsers.Where(u => u.UserName == _username).First().Id;
+                userId = _userCtx.ApplicationUsers.FirstOrDefault(u => u.UserName == _username).Id;
             }
-            
+
             return _ctx.Posts
-               // .Where(p => p.UserId == userId)
-                .Include(post => post.Tags);
+                //.Where(p => p.UserId == userId)
+                .Include(post => post.Tags)
+                .Include(post => post.Likes);
         }
 
         public Post GetById(int id)
         {
-            return GetAll(null).Where(p => p.Id == id)
-                .First();
+            return GetAll().FirstOrDefault(p => p.Id == id);
         }
 
         public void DeleteById(int id)
         {
-            var del_post = GetAll(null).Where(p => p.Id == id).First();
+            var del_post = GetAll().Where(p => p.Id == id).First();
             if (del_post != null)
             {
                 _ctx.Posts.Remove(del_post);
@@ -63,13 +63,12 @@ namespace Instagram.Services
 
         public IEnumerable<Post> GetWithTag(string tag)
         {
-            return GetAll(null).Where(post
+            return GetAll().Where(post
                 => post.Tags
                     .Any(t => t.Title == tag));
         }
 
-        [Authorize]
-        public async Task AddPost(string title, string tags, string url)
+        public async Task AddPost(string title, string tags, string description, string url)
         {
             var httpcontext = _httpContextAccessor.HttpContext;
             var userId = (await _userManager.GetUserAsync(httpcontext.User)).Id;
@@ -78,6 +77,7 @@ namespace Instagram.Services
             var post = new Post()
             {
                 Title = title,
+                Description = description,
                 Tags = ParseTags(tags),
                 Created = DateTime.Now,
                 Url = url,
@@ -93,31 +93,13 @@ namespace Instagram.Services
         public List<Tag> ParseTags(string tags)
         {
             var httpcontext = _httpContextAccessor.HttpContext;
-            var userId =  _userManager.GetUserAsync(httpcontext.User).Id;
+            var userId = _userManager.GetUserAsync(httpcontext.User).Id;
 
             return tags.Split(",").Select(tag => new Tag
             {
                 Title = tag
             }).ToList();
         }
-
-        public void SetLike(int postId)
-        {
-            string userId = ActionWithUser.GetCurrentUserAsync(_httpContextAccessor, _userManager).Result.Id;
-            Like like = new Like()
-            {
-                UserId = userId
-                };
-            if (GetById(postId).Likes
-                    .Where(l => l.UserId == userId) != null)
-            {
-                _ctx.Likes.Remove(like);
-            }
-            else
-            {
-                _ctx.Likes.Add(like);
-            }
-            _ctx.SaveChanges();
-        }
     }
 }
+
