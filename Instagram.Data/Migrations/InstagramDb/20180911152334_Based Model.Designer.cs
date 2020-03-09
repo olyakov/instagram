@@ -4,14 +4,16 @@ using Instagram.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Instagram.Data.Migrations.InstagramDb
 {
     [DbContext(typeof(InstagramDbContext))]
-    partial class InstagramDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180911152334_Based Model")]
+    partial class BasedModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

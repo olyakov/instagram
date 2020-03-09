@@ -16,5 +16,22 @@ namespace Instagram.Data
         public DbSet<Like> Likes { get; set; }
         public DbSet<Dislike> Dislikes { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Like>()
+                .HasOne(l => l.Post)
+                .WithMany(p => p.Likes);
+
+            builder.Entity<Dislike>()
+                .HasOne(d => d.Post)
+                .WithMany(p => p.Dislikes);
+
+            builder.Entity<Comment>()
+                .HasOne(c => c.Post)
+                .WithMany(p => p.Comments);
+                
+
+            base.OnModelCreating(builder);
+        }
     }
 }

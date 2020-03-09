@@ -62,7 +62,9 @@ namespace Instagram.Data.Migrations.InstagramDb
                 });
 
             migrationBuilder.CreateTable(
-                name: "Dislikes",
+                name: "Dis" +
+                      "likes" +
+                      "",
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),

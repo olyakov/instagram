@@ -4,14 +4,16 @@ using Instagram.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Instagram.Data.Migrations.InstagramDb
 {
     [DbContext(typeof(InstagramDbContext))]
-    partial class InstagramDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180911075307_FixedRelation_2")]
+    partial class FixedRelation_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,7 +71,7 @@ namespace Instagram.Data.Migrations.InstagramDb
 
                     b.Property<DateTime>("Created");
 
-                    b.Property<int?>("PostId");
+                    b.Property<int>("PostId");
 
                     b.Property<string>("UserId")
                         .IsRequired();
@@ -90,8 +92,7 @@ namespace Instagram.Data.Migrations.InstagramDb
 
                     b.Property<int?>("PostId");
 
-                    b.Property<string>("UserId")
-                        .IsRequired();
+                    b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
@@ -109,8 +110,7 @@ namespace Instagram.Data.Migrations.InstagramDb
 
                     b.Property<int?>("PostId");
 
-                    b.Property<string>("UserId")
-                        .IsRequired();
+                    b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
@@ -139,8 +139,7 @@ namespace Instagram.Data.Migrations.InstagramDb
                     b.Property<string>("Url")
                         .IsRequired();
 
-                    b.Property<string>("UserId")
-                        .IsRequired();
+                    b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
@@ -172,7 +171,8 @@ namespace Instagram.Data.Migrations.InstagramDb
                 {
                     b.HasOne("Instagram.Data.Model.Post", "Post")
                         .WithMany("Comments")
-                        .HasForeignKey("PostId");
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Instagram.Data.Model.AspNetUsers", "User")
                         .WithMany()
@@ -188,28 +188,25 @@ namespace Instagram.Data.Migrations.InstagramDb
 
                     b.HasOne("Instagram.Data.Model.AspNetUsers", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Instagram.Data.Model.Like", b =>
                 {
-                    b.HasOne("Instagram.Data.Model.Post", "Post")
+                    b.HasOne("Instagram.Data.Model.Post")
                         .WithMany("Likes")
                         .HasForeignKey("PostId");
 
                     b.HasOne("Instagram.Data.Model.AspNetUsers", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Instagram.Data.Model.Post", b =>
                 {
                     b.HasOne("Instagram.Data.Model.AspNetUsers", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Instagram.Data.Model.Tag", b =>
