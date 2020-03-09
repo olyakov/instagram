@@ -50,6 +50,8 @@ namespace Instagram
 
 
             services.AddScoped<IPost, PostServices>();
+            services.AddScoped<IUser, UserService>();
+            services.AddScoped<IRaiting, RaitingService>();
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

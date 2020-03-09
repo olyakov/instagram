@@ -22,6 +22,7 @@ namespace Instagram.Controllers
     {
         private readonly IPost _postService;
         private readonly IRaiting _raitingService;
+        private readonly IUser _userService;
         private readonly IHostingEnvironment _he;
 
         public PostController(IPost postService, IRaiting raitingService, IHostingEnvironment he)
@@ -29,6 +30,7 @@ namespace Instagram.Controllers
             _he = he;
             _postService = postService;
             _raitingService = raitingService;
+            _userService = userService;
         }
 
         public IActionResult Upload()
@@ -41,7 +43,7 @@ namespace Instagram.Controllers
         public async Task<IActionResult> SetLike(LikeDto dto)
         {
             var post = _postService.GetById(dto.PostId);
-            var user  = User.FindFirst(ClaimTypes.Name).Value;
+            var user = _userService.GetCurrentUser(HttpContext.User).Result;
             await _raitingService.SetLike(post, user);
             return Ok();
         }

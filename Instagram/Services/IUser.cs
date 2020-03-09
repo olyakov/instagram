@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Instagram.Data.Model;
 
 namespace Instagram.Services
 {
-    interface IUserService
+    public interface IUser
     {
         AspNetUsers GetUserById(string id);
-        Task<AspNetUsers> GetCurrentUser();
-        //Task GetUserByUserName(string userName);
+        AspNetUsers GetUserByUsername(string username);
+        Task<AspNetUsers> GetCurrentUser(ClaimsPrincipal claim);
     }
 }

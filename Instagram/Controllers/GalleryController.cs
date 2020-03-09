@@ -9,14 +9,15 @@ using Microsoft.Extensions.Configuration;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Instagram.Services;
 
 namespace Instagram.Controllers
 {
-    [Authorize("/Identity/Account/Login")]
+    [Authorize]
     public class GalleryController : Controller
     {
         private readonly IPost _postService;
-        
+
 
         public GalleryController(IPost postService)
         {
