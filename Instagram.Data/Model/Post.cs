@@ -7,9 +7,17 @@ namespace Instagram.Data.Model
 {
     public class Post
     {
+        public Post()
+        {
+            Tags = new List<Tag>();
+            Comments = new List<Comment>();
+            Likes = new List<Like>();
+            Dislikes = new List<Dislike>();
+        }
+
         public int Id { get; set; }
 
-        public AspNetUsers User { get; set; }
+        public virtual AspNetUsers User { get; set; }
 
         [Required]
         public string UserId { get; set; }
