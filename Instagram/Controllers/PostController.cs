@@ -25,7 +25,9 @@ namespace Instagram.Controllers
         private readonly IUser _userService;
         private readonly IHostingEnvironment _he;
 
-        public PostController(IPost postService, IRaiting raitingService, IHostingEnvironment he)
+
+        public PostController(IPost postService, IRaiting raitingService, IHostingEnvironment he,
+            IUser userService)
         {
             _he = he;
             _postService = postService;
@@ -55,7 +57,7 @@ namespace Instagram.Controllers
             {
                 var filename = Path.Combine(_he.WebRootPath, Path.GetFileName(pic.FileName));
                 pic.CopyTo(new FileStream(filename, FileMode.Create));
-                await _postService.AddPost(title, tags, description, "/"+Path.GetFileName(pic.FileName));
+                await _postService.AddPost(title, tags, description, "/" + Path.GetFileName(pic.FileName));
             }
             return RedirectToAction("Index", "Gallery");
         }
