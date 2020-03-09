@@ -27,7 +27,7 @@ namespace Instagram.Services
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
         }
-        [Authorize]
+
         public IEnumerable<Post> GetAll(string _username = null)
         {
             string userId;
@@ -46,10 +46,8 @@ namespace Instagram.Services
                 .Include(post => post.Likes);
         }
 
-        public Post GetById(int id)
-        {
-            return GetAll().FirstOrDefault(p => p.Id == id);
-        }
+        public Post GetById(int id) => GetAll().FirstOrDefault(p => p.Id == id);
+
 
         public void DeleteById(int id)
         {

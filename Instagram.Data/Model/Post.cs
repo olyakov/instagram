@@ -9,7 +9,6 @@ namespace Instagram.Data.Model
     {
         public Post()
         {
-            Tags = new List<Tag>();
             Comments = new List<Comment>();
             Likes = new List<Like>();
             Dislikes = new List<Dislike>();
