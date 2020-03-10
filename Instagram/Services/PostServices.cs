@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Instagram.Models;
 
 namespace Instagram.Services
 {
@@ -44,6 +45,7 @@ namespace Instagram.Services
             return _ctx.Posts
                 //.Where(p => p.UserId == userId)
                 .Include(post => post.Tags)
+                .Include(post => post.User)
                 .Include(post => post.Likes);
         }
 
@@ -85,7 +87,26 @@ namespace Instagram.Services
                                                                                     {
                                                                                         Title = tag
                                                                                     }).ToList();
-        
+
+        public GalleryDetailModel GetGalleryDetailModel(Post post)
+        {
+            var model = new GalleryDetailModel()
+            {
+                Id = post.Id,
+                Title = post.Title,
+                Description = post.Description,
+                Created = post.Created,
+                Url = post.Url,
+                Tags = post.Tags.Select(t => t.Title).ToList(),
+                Likes = post.Likes == null ? new List<Like>() : post.Likes.ToList(),
+                Dislikes = post.Dislikes == null ? new List<Dislike>() : post.Dislikes.ToList(),
+                Comments = post.Comments == null ? new List<Comment>() : post.Comments.ToList(),
+                User = _userService.GetCurrentUser(_httpCtxAcc.HttpContext.User).Result,
+                IsSetLike = post.Likes == null ? false : !post.Likes.Any(l => l.UserId == _userService.GetCurrentUser(_httpCtxAcc.HttpContext.User).Result.Id) ? false : true
+            };
+            return model;
+        }
+
     }
 }
 

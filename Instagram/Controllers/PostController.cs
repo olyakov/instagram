@@ -10,6 +10,8 @@ using System.IO;
 using System.Net;
 using Instagram.Services;
 using System.Security.Claims;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Instagram.Controllers
 {
@@ -39,8 +41,25 @@ namespace Instagram.Controllers
         {
             var model = new UploadPostModel();
             return View(model);
-        }
+        }   
 
+        public IActionResult Newsline()
+        {
+            var postList = _postService.GetAll();
+            List<GalleryDetailModel> posts = new List<GalleryDetailModel>();
+            foreach (var post in postList)
+            {
+                posts.Add(_postService.GetGalleryDetailModel(post));
+            }
+
+            var model = new GalleryIndexModel()
+            {
+                Posts = posts
+            };
+
+            return View(model);
+        }
+ 
         [HttpPost]
         public async Task<IActionResult> SetLike(LikeDto dto)
         {

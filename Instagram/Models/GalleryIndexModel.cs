@@ -8,6 +8,6 @@ namespace Instagram.Models
 {
     public class GalleryIndexModel
     {
-        public IEnumerable<Post> Posts { get; set; }
+        public IEnumerable<GalleryDetailModel> Posts { get; set; }
     }
 }

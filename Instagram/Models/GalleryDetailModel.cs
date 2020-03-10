@@ -18,6 +18,7 @@ namespace Instagram.Models
         public List<Like> Likes { get; set; }
         public List<Dislike> Dislikes { get; set; }
         public List<Comment> Comments { get; set; }
+        public AspNetUsers User { get; set; }
         
         public bool IsSetLike { get; set; }
     }
