@@ -1,0 +1,130 @@
+﻿@model Instagram.Models.GalleryIndexModel
+
+
+<section>
+    @foreach (var post in Model.Posts)
+    {
+        <div class='insta fade-scroll'>
+            <div class='top-insta'>
+                <a href='#' target='_blank'><img src='https://images.pexels.com/photos/60217/pexels-photo-60217.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'></a>
+                <a href='#' target='_blank' class='user'>
+                    @post.User.UserName
+                </a>
+                <span class='dot'></span>
+
+            </div>
+            <div class='post'>
+                <div class="overlay">
+                    <a>
+                        <span data-post-id="@post.Id" class="js-toggle">
+                        </span>
+                    </a>
+                </div>
+                <img src='@post.Url'>
+            </div>
+            <div class='footer'>
+
+                <div class='react'>
+                    @if (post.IsSetLike)
+                    {
+                        <a class="icons-href" style="text-decoration: none">
+                            <i data-post-id="@post.Id" class="fa fa-heart fa-2x red-heart js-toggle" aria-hidden="true"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="icons-href" style="text-decoration: none; color: black">
+                            <i data-post-id="@post.Id" class="fa fa-heart-o fa-2x js-toggle" aria-hidden="true"></i>
+                        </a>
+                    }
+                    <span class="lg-like-txt-post" style="font-weight:bold">@post.Likes.Count likes</span>
+                    <a href="#" style="text-decoration: none; color: black">
+                        <i class="fa fa-comment-o fa-2x"></i>
+                    </a>
+
+                </div>
+
+                <div class='caption'>
+                    <a href='#'>@post.User.UserName</a><span>@post.Title</span>
+                </div>
+                <div>
+                    @post.Description
+                </div>
+                <hr/>
+                <span>@post.Created.ToLongDateString()</span>
+                <div class='comment-section'>
+                    <input type='text' id='cmnt' placeholder='Add a comment...'>
+                    <span class='dot02'></span>
+                </div>
+
+            </div> <!-- end Footer -->
+        </div> <!-- end Insta -->
+    }
+</section>
+
+
+@section scripts
+    {
+    <script>
+        $(document).ready(function () {
+            $(".js-toggle").click(function (e) {
+                var id = $(e.target).attr("data-post-id");
+                $.post("/Post/SetLike", { postId: id })
+                    .done(() => window.location.href = "/Gallery/Detail/" + id);
+            });
+        });
+    </script>
+    <script>
+        $(function () {
+            $(window).on('scroll resize', function holy_nob() {
+                var wh = $(window).height();
+                var wt = $(window).scrollTop();
+                var wb = (wt + wh);
+                var rbj = $('.lil-bar');
+                var ft = $('.footer-cont');
+                var ft_h = ft.height();
+                var tof = (ft_h);
+                var fol = (ft_h + 15);
+                if (wb >= tof) {
+                    rbj.css('bottom', fol);
+                } else {
+                    rbj.css('bottom', '15px');
+                }
+                $('.fade-scroll').each(function () {
+                    var element = $(this);
+                    var el_h = element.height();
+                    var el_t = element.offset().top;
+                    var el_b = (el_t + el_h);
+                    if ((el_b > wt) && (el_t < wb)) {
+                        element.addClass('animation');
+                    }
+                    else {
+                        element.removeClass('animation');
+                    }
+                    if (wt > el_t) {
+                        element.css('opacity', 1 - (wt - el_t) / 850);
+                    }
+                    if (wt > 10) {
+                        $('.navbar').addClass('navfar').find('span').addClass('mini')
+                        $('.fa-instagram').addClass('bisc');
+                    }
+
+                    else {
+                        $('.navbar').removeClass('navfar');
+                        $('.navbar span').removeClass('mini');
+                        $('.fa-instagram').removeClass('bisc');
+                    }
+                });
+            });
+            $('.list-order, .collapse').on('click', function () {
+                $('.list').toggleClass('animate');
+                $('.list-order').toggleClass('ba');
+            });
+            $("a[href='#']").click(function (e) {
+                e.preventDefault();
+            });
+        });
+    </script>
+
+}
+

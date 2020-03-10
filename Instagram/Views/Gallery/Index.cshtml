@@ -4,8 +4,20 @@
     <div class="row gallery-content">
         @foreach (var post in Model.Posts)
         {
-            <div class="gallery-post-container drop-shadow">
+
+            <div class="gallery-post-container drop-shadow post">
                 <a asp-controller="Gallery" asp-action="Detail" asp-route-id="@post.Id">
+                    <div class="overlay">
+                        <span style="background-image: none; width: 300px;">
+                            <div class="post-like-text">
+                                <i class="fa fa-heart-o fa-lg " aria-hidden="true"></i>
+                                @post.Likes.Count
+                                &emsp;
+                                <i class="fa fa-comment-o fa-lg " aria-hidden="true"></i>
+                                @post.Comments.Count
+                            </div>
+                        </span>
+                    </div>
                     <div class="gallery-post" style="background-image: url(@post.Url)"></div>
                 </a>
             </div>

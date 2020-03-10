@@ -13,13 +13,13 @@ for details on configuring this project to bundle and minify static web assets. 
 }
 
 .gallery-post-container {
-    padding: 3px;
-    background: #fff;
-    border-radius: 3px;
-    display: inline-block;
-    width: 300px;
-    height: 300px;
-    position: relative;
+    padding: 3px !important;
+    background: #fff !important;
+    border-radius: 3px !important;
+    display: inline-block !important;
+    width: 300px !important;
+    height: 300px !important;
+    position: relative !important;
 }
 
 .post-detail-cotainer {
@@ -58,7 +58,9 @@ for details on configuring this project to bundle and minify static web assets. 
     box-shadow: 0 5px 5px rgba(0,0,0,0.2), 0 5px 5px rgba(0,0,0,0.2);
 }
 
-.red-heart { color: #e74c3c; }
+.red-heart {
+    color: #e74c3c;
+}
 
 .gray-comment {
     color: #353b48;
@@ -66,9 +68,22 @@ for details on configuring this project to bundle and minify static web assets. 
 
 .blk-btn { color: black; }
 
-.lg-heart { font-size: 1.8em; }
+.lg-like-txt { font-size: 1.3em; }
+.lg-like-txt-post {
+    font-size: 1.1em;
+}
 
 .lg-commets { font-size: 1.6em; }
+
+.icons-href {
+    text-decoration: none !important;
+    color: black;
+}
+
+.post-img {
+    width: 100%;
+    border-radius: 3px;
+}
 
 .navbar-inverse {
     background-color: #dcdde1;
@@ -85,6 +100,7 @@ body {
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    padding-top: 15px;
 }
 
 /* Carousel */
@@ -101,6 +117,19 @@ body {
 /* QR code generator */
 #qrCode {
     margin: 15px;
+}
+body{background: #8BC34A;}
+
+.post-like-text {
+    top: 50%;
+    left: 0px;
+    width: 100%;
+    position: absolute;
+    text-align: center;
+    transform: translateY(-70%);
+    font-family: 'Oswald', sans-serif;
+    font-size: 150%;
+    color: #dcdde1;
 }
 
 /* Hide/rearrange for smaller screens */

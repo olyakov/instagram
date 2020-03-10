@@ -8,6 +8,10 @@
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/profile_card.css" />
+        <link rel="stylesheet" href="~/css/insta.css" />
+        <
+        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -26,16 +30,31 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Gallery" asp-action="Index" class="navbar-brand">Instagram</a>
+                <a asp-area="" asp-controller="Gallery" asp-action="Index" class="navbar-brand"><i class="fa fa-instagram fa-lg" style="border-radius: 5px"></i><span></span> Instagram</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Post" asp-action="Upload">Upload</a></li>
+                    <li><a asp-area="" asp-controller="Post" asp-action="Newsline">Newsline</a></li>
                 </ul>
                 <partial name="_LoginPartial" />
             </div>
         </div>
     </nav>
+    <div class='lil-bar'>
+        <div class='bar-cont'>
+            <a asp-area="" asp-controller="Post" asp-action="Upload"><i class="fa fa-plus"></i></a>
+            <a href='#' onclick='return false;' class='list-order' role="button"><i class="fa fa-ellipsis-h"></i></a>
+        </div>
+    </div>
+    <div class="list">
+        <ul>
+            <li><a href="#" target='_blank'><img src="https://images.pexels.com/photos/60217/pexels-photo-60217.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260" class="avatar avatar-50">Alesha</a></li>
+            <li><a href='#'>Log in</a></li>
+            <li><a href='#'>Sign up</a></li>
+            <li><a href='#'>Report this user</a></li>
+            <li class='collapse'><a href='#'>Collapse the bar</a></li>
+        </ul>
+    </div>
 
     <partial name="_CookieConsentPartial" />
 
@@ -67,7 +86,57 @@
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
+    <script>
+        $(function () {
+            $(window).on('scroll resize', function holy_nob() {
+                var wh = $(window).height();
+                var wt = $(window).scrollTop();
+                var wb = (wt + wh);
+                var rbj = $('.lil-bar');
+                var ft = $('.footer-cont');
+                var ft_h = ft.height();
+                var tof = (ft_h);
+                var fol = (ft_h + 15);
+                if (wb >= tof) {
+                    rbj.css('bottom', fol);
+                } else {
+                    rbj.css('bottom', '15px');
+                }
+                $('.fade-scroll').each(function () {
+                    var element = $(this);
+                    var el_h = element.height();
+                    var el_t = element.offset().top;
+                    var el_b = (el_t + el_h);
+                    if ((el_b > wt) && (el_t < wb)) {
+                        element.addClass('animation');
+                    }
+                    else {
+                        element.removeClass('animation');
+                    }
+                    if (wt > el_t) {
+                        element.css('opacity', 1 - (wt - el_t) / 850);
+                    }
+                    if (wt > 10) {
+                        $('.navbar').addClass('navfar').find('span').addClass('mini')
+                        $('.fa-instagram').addClass('bisc');
+                    }
 
+                    else {
+                        $('.navbar').removeClass('navfar');
+                        $('.navbar span').removeClass('mini');
+                        $('.fa-instagram').removeClass('bisc');
+                    }
+                });
+            });
+            $('.list-order, .collapse').on('click', function () {
+                $('.list').toggleClass('animate');
+                $('.list-order').toggleClass('ba');
+            });
+            $("a[href='#']").click(function (e) {
+                e.preventDefault();
+            });
+        });
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

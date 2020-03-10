@@ -4,53 +4,61 @@
 
 
 <div class="container body-content">
-    <div class="col-md-7">
-        <div class="row post-detail-cotainer">
+    <div class="row">
+        <div class="col col-sm-7">
+            <div class="row post-detail-cotainer">
 
-            <div class="post-detail">
-                <img src="@Model.Url" alt="@Model.Title" />
+                <div class="post-detail">
+                    <img class="post-img" src="@Model.Url" alt="@Model.Title" />
+                </div>
+            </div>
+        </div>
+        <div class="col col-sm-5">
+            <div class="row">
+                <h2>@Model.Title</h2>
+                <hr>
+                <p>
+                    @Model.Description
+                </p>
+                <div class="post-detail-meta">
+                    @if (Model.IsSetLike)
+                    {
+                        <a style="cursor: pointer; color: black" >
+                            <i data-post-id="@Model.Id" class="fa fa-heart fa-lg red-heart js-toggle" aria-hidden="true"></i>
+                        </a>
+                    }
+                    else
+                    {
+                        <a style="cursor: pointer; color: black">
+                            <i data-post-id="@Model.Id" class="fa fa-heart-o fa-lg js-toggle" aria-hidden="true"></i>
+                        </a>
+                    }
+                    <span class="lg-like-txt-post" style="font-weight:bold">@Model.Likes.Count likes</span>
+                    <a href="#" style="cursor: pointer; color: black">
+                        <i class="fa fa-comment-o fa-lg"></i>
+                    </a>
+                    <hr>
+                    <span>@Model.Created.ToLongDateString()</span>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <label for="Comment">Comment</label>
+                    <input id="Comment" class="form-control" />
+                    <div class="submit">
+                        <button type="submit" id="btn-comment" class="btn btn-info">
+                            Comment
+                        </button>
+                    </div>
+                </div>
+                <div class="row controls" style="padding: 10px">
+                    <a class="btn btn-primary" asp-controller="Gallery" asp-action="Index">
+                        Back to all
+                    </a>
+                </div>
+
             </div>
         </div>
     </div>
-    <div class="col-md-5">
-
-        <h2>@Model.Title</h2>
-        <hr>
-        <p>
-            @Model.Description
-        </p>
-
-
-        <div class="row post-detail-meta">
-
-            @if (@Model.IsSetLike)
-            {
-                <a style="color: black">
-                    <span data-post-id="@Model.Id" class="glyphicon glyphicon-heart red-heart lg-heart js-toggle"></span>
-                </a>
-            }
-            else
-            {
-                <a style="color: black">
-                    <span data-post-id="@Model.Id" class="glyphicon glyphicon-heart-empty lg-heart js-toggle"></span>
-                </a>
-            }
-            <span style="font-weight:bold">@Model.Likes.Count likes</span>
-            <a href="#" style="color: black">
-                <span class="glyphicon glyphicon-comment gray-comment lg-commets"></span>
-            </a>
-            <hr>
-            <span style="font-weight:bold">Uploaded: </span>
-            <span>@Model.Created.ToShortDateString(), @Model.Created.ToShortTimeString()</span>
-        </div>
-        <div class="row controls">
-            <a class="btn btn-primary" asp-controller="Gallery" asp-action="Index">
-                Back to all
-            </a>
-        </div>
-
-    </div>
-
 </div>
 
 @section scripts
