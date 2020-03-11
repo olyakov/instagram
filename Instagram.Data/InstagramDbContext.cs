@@ -10,14 +10,28 @@ namespace Instagram.Data
             : base(options)
         { }
 
-        public DbSet<Post> Posts { get; set; }
-        public DbSet<Tag> Tags { get; set; }
-        public DbSet<Comment> Comments { get; set; }
-        public DbSet<Like> Likes { get; set; }
-        public DbSet<Dislike> Dislikes { get; set; }
+        public virtual DbSet<Post> Posts { get; set; }
+        public virtual DbSet<Tag> Tags { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
+        public virtual DbSet<Like> Likes { get; set; }
+        public virtual DbSet<Dislike> Dislikes { get; set; }
+        public virtual DbSet<Follow> Follows { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<Follow>()
+                .HasKey(f => new { f.FollowingId, f.FollowerId });
+
+            builder.Entity<AspNetUsers>()
+                .HasMany(u => u.Followers)
+                .WithOne(f => f.Following)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<AspNetUsers>()
+                .HasMany(u => u.Followings)
+                .WithOne(f => f.Follower)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<Like>()
                 .HasOne(l => l.Post)
                 .WithMany(p => p.Likes);
