@@ -23,7 +23,7 @@
                 <div class="post-detail-meta">
                     @if (Model.IsSetLike)
                     {
-                        <a style="cursor: pointer; color: black" >
+                        <a style="cursor: pointer; color: black">
                             <i data-post-id="@Model.Id" class="fa fa-heart fa-lg red-heart js-toggle" aria-hidden="true"></i>
                         </a>
                     }
@@ -34,21 +34,18 @@
                         </a>
                     }
                     <span class="lg-like-txt-post" style="font-weight:bold">@Model.Likes.Count likes</span>
-                    <a href="#" style="cursor: pointer; color: black">
+                    &emsp;
+                    <a href="#" class="icons-href">
                         <i class="fa fa-comment-o fa-lg"></i>
                     </a>
+                    <span class="lg-like-txt-post" style="font-weight:bold">@Model.Comments.Count comments</span>
                     <hr>
                     <span>@Model.Created.ToLongDateString()</span>
                 </div>
                 <hr/>
-                <div class="form-group">
-                    <label for="Comment">Comment</label>
-                    <input id="Comment" class="form-control" />
-                    <div class="submit">
-                        <button type="submit" id="btn-comment" class="btn btn-info">
-                            Comment
-                        </button>
-                    </div>
+                <div class='comment-section'>
+                    <input type='text' id='cmnt' placeholder='Add a comment...'>
+                    <span class='dot02'></span>
                 </div>
                 <div class="row controls" style="padding: 10px">
                     <a class="btn btn-primary" asp-controller="Gallery" asp-action="Index">

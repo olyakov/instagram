@@ -30,23 +30,24 @@ namespace Instagram.Services
             _httpCtxAcc = httpCtxAcc;
         }
 
-        public IEnumerable<Post> GetAll(string _username = null)
-        {
-            string userId;
-            if (_username == null)
-            {
-                userId = _userService.GetCurrentUser(_httpCtxAcc.HttpContext.User).Result.Id;
-            }
-            else
-            {
-                userId = _userService.GetUserByUsername(_username).Id;
-            }
-
-            return _ctx.Posts
-                //.Where(p => p.UserId == userId)
+        public IEnumerable<Post> GetAll() => _ctx.Posts
                 .Include(post => post.Tags)
                 .Include(post => post.User)
                 .Include(post => post.Likes);
+
+
+        public IEnumerable<Post> GetAllCurrentUser()
+        {
+            var userId = _userService.GetCurrentUser(_httpCtxAcc.HttpContext.User).Result.Id;
+
+            return GetAll().Where(p => p.UserId == userId);
+        }
+
+        public IEnumerable<Post> GetAllByUsername(string username)
+        {
+            var userId = _userService.GetUserByUsername(username).Id;
+
+            return GetAll().Where(p => p.UserId == userId);
         }
 
         public Post GetById(int id) => GetAll().FirstOrDefault(p => p.Id == id);
@@ -54,7 +55,7 @@ namespace Instagram.Services
 
         public async Task DeleteById(int id)
         {
-            var del_post = GetAll().FirstOrDefault(p => p.Id == id);
+            var del_post = GetAllCurrentUser().FirstOrDefault(p => p.Id == id);
             _ctx.Posts.Remove(del_post);
             await _ctx.SaveChangesAsync();
         }
@@ -84,9 +85,9 @@ namespace Instagram.Services
         }
 
         public List<Tag> ParseTags(string tags) => tags.Split(",").Select(tag => new Tag
-                                                                                    {
-                                                                                        Title = tag
-                                                                                    }).ToList();
+        {
+            Title = tag
+        }).ToList();
 
         public GalleryDetailModel GetGalleryDetailModel(Post post)
         {
@@ -101,7 +102,7 @@ namespace Instagram.Services
                 Likes = post.Likes == null ? new List<Like>() : post.Likes.ToList(),
                 Dislikes = post.Dislikes == null ? new List<Dislike>() : post.Dislikes.ToList(),
                 Comments = post.Comments == null ? new List<Comment>() : post.Comments.ToList(),
-                User = _userService.GetCurrentUser(_httpCtxAcc.HttpContext.User).Result,
+                User = post.User,
                 IsSetLike = post.Likes == null ? false : !post.Likes.Any(l => l.UserId == _userService.GetCurrentUser(_httpCtxAcc.HttpContext.User).Result.Id) ? false : true
             };
             return model;

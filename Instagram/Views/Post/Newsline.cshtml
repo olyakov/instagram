@@ -6,10 +6,8 @@
     {
         <div class='insta fade-scroll'>
             <div class='top-insta'>
-                <a href='#' target='_blank'><img src='https://images.pexels.com/photos/60217/pexels-photo-60217.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'></a>
-                <a href='#' target='_blank' class='user'>
-                    @post.User.UserName
-                </a>
+                <a asp-route-username="@post.User.UserName" asp-controller="Gallery" asp-action="Index"><img src='https://images.pexels.com/photos/5256/city-cars-road-houses.jpg?auto=compress&cs=tinysrgb&h=750&w=1260'></a>
+                <a asp-route-username="@post.User.UserName" asp-controller="Gallery" asp-action="Index" class='user'>@post.User.UserName</a>
                 <span class='dot'></span>
 
             </div>
@@ -38,10 +36,11 @@
                         </a>
                     }
                     <span class="lg-like-txt-post" style="font-weight:bold">@post.Likes.Count likes</span>
+                    &emsp;
                     <a href="#" style="text-decoration: none; color: black">
                         <i class="fa fa-comment-o fa-2x"></i>
                     </a>
-
+                    <span class="lg-like-txt-post" style="font-weight:bold">@post.Comments.Count comments</span>
                 </div>
 
                 <div class='caption'>
@@ -74,57 +73,5 @@
             });
         });
     </script>
-    <script>
-        $(function () {
-            $(window).on('scroll resize', function holy_nob() {
-                var wh = $(window).height();
-                var wt = $(window).scrollTop();
-                var wb = (wt + wh);
-                var rbj = $('.lil-bar');
-                var ft = $('.footer-cont');
-                var ft_h = ft.height();
-                var tof = (ft_h);
-                var fol = (ft_h + 15);
-                if (wb >= tof) {
-                    rbj.css('bottom', fol);
-                } else {
-                    rbj.css('bottom', '15px');
-                }
-                $('.fade-scroll').each(function () {
-                    var element = $(this);
-                    var el_h = element.height();
-                    var el_t = element.offset().top;
-                    var el_b = (el_t + el_h);
-                    if ((el_b > wt) && (el_t < wb)) {
-                        element.addClass('animation');
-                    }
-                    else {
-                        element.removeClass('animation');
-                    }
-                    if (wt > el_t) {
-                        element.css('opacity', 1 - (wt - el_t) / 850);
-                    }
-                    if (wt > 10) {
-                        $('.navbar').addClass('navfar').find('span').addClass('mini')
-                        $('.fa-instagram').addClass('bisc');
-                    }
-
-                    else {
-                        $('.navbar').removeClass('navfar');
-                        $('.navbar span').removeClass('mini');
-                        $('.fa-instagram').removeClass('bisc');
-                    }
-                });
-            });
-            $('.list-order, .collapse').on('click', function () {
-                $('.list').toggleClass('animate');
-                $('.list-order').toggleClass('ba');
-            });
-            $("a[href='#']").click(function (e) {
-                e.preventDefault();
-            });
-        });
-    </script>
-
 }
 

@@ -45,7 +45,7 @@ for details on configuring this project to bundle and minify static web assets. 
 }
 
 #upload-form {
-    padding: 60px;
+    padding: 60px ;
     margin: auto;
     width: 50%;
 }
@@ -55,7 +55,7 @@ for details on configuring this project to bundle and minify static web assets. 
 }
 
 .drop-shadow {
-    box-shadow: 0 5px 5px rgba(0,0,0,0.2), 0 5px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 5px 5px rgba(0,0,0,0.2), 0 1px 1px rgba(0,0,0,0.2);
 }
 
 .red-heart {

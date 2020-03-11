@@ -9,8 +9,10 @@ namespace Instagram.Services
 {
     public interface IPost
     {
-        IEnumerable<Post> GetAll(string userId=null);
+        IEnumerable<Post> GetAll();
         IEnumerable<Post> GetWithTag(string tag);
+        IEnumerable<Post> GetAllByUsername(string username);
+        IEnumerable<Post> GetAllCurrentUser();
         Post GetById(int id);
         Task DeleteById(int id);
         Task AddPost(string title, string tags, string description, string url);
