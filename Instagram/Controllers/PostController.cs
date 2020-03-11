@@ -45,7 +45,7 @@ namespace Instagram.Controllers
 
         public IActionResult Newsline()
         {
-            var postList = _postService.GetAll().OrderByDescending(p => p.Created).ThenBy(p => p.Id).ToList();
+            var postList = _postService.GetAll().OrderByDescending(p => p.Created).ToList();
             List<GalleryDetailModel> posts = new List<GalleryDetailModel>();
             foreach (var post in postList)
             {

@@ -29,7 +29,11 @@ namespace Instagram.Controllers
         [Route("/{username?}")]
         public IActionResult Index(string username)
         {
-            var postList = _postService.GetAll(username);
+            if (username == null)
+            {
+                username = User.FindFirst(ClaimTypes.Name).Value;
+            }
+            var postList = _postService.GetAllByUsername(username);
             List<GalleryDetailModel> posts = new List<GalleryDetailModel>();
             foreach (var post in postList)
             {
