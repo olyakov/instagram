@@ -31,14 +31,14 @@ namespace Instagram.Services
         }
 
         public IEnumerable<Post> GetAll() => _ctx.Posts
-                .Include(post => post.Tags)
-                .Include(post => post.User)
-                .Include(post => post.Likes);
+            .Include(post => post.Tags)
+            .Include(post => post.User)
+            .Include(post => post.Likes);
 
 
         public IEnumerable<Post> GetAllCurrentUser()
         {
-            var userId = _userService.GetCurrentUser(_httpCtxAcc.HttpContext.User).Result.Id;
+            var userId = _userService.GetCurrentUser(_httpCtxAcc.HttpContext.User).Id;
 
             return GetAll().Where(p => p.UserId == userId);
         }
@@ -53,10 +53,9 @@ namespace Instagram.Services
         public Post GetById(int id) => GetAll().FirstOrDefault(p => p.Id == id);
 
 
-        public async Task DeleteById(int id)
+        public async Task Remove(Post post)
         {
-            var del_post = GetAllCurrentUser().FirstOrDefault(p => p.Id == id);
-            _ctx.Posts.Remove(del_post);
+            _ctx.Posts.Remove(post);
             await _ctx.SaveChangesAsync();
         }
 
@@ -69,7 +68,7 @@ namespace Instagram.Services
 
         public async Task AddPost(string title, string tags, string description, string url)
         {
-            var userId = _userService.GetCurrentUser(_httpCtxAcc.HttpContext.User).Result.Id;
+            var userId = _userService.GetCurrentUser(_httpCtxAcc.HttpContext.User).Id;
 
             var post = new Post()
             {
@@ -99,11 +98,11 @@ namespace Instagram.Services
                 Created = post.Created,
                 Url = post.Url,
                 Tags = post.Tags.Select(t => t.Title).ToList(),
-                Likes = post.Likes == null ? new List<Like>() : post.Likes.ToList(),
-                Dislikes = post.Dislikes == null ? new List<Dislike>() : post.Dislikes.ToList(),
-                Comments = post.Comments == null ? new List<Comment>() : post.Comments.ToList(),
+                Likes = post.Likes.ToList(),
+                Dislikes = post.Dislikes.ToList(),
+                Comments = post.Comments.ToList(),
                 User = post.User,
-                IsSetLike = post.Likes == null ? false : !post.Likes.Any(l => l.UserId == _userService.GetCurrentUser(_httpCtxAcc.HttpContext.User).Result.Id) ? false : true
+                IsSetLike = !post.Likes.Any(l => l.UserId == _userService.GetCurrentUser(_httpCtxAcc.HttpContext.User).Id) ? false : true,
             };
             return model;
         }

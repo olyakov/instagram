@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Instagram.Services
 {
@@ -20,10 +21,20 @@ namespace Instagram.Services
             _userCtx = userCtx;
         }
 
-        public Task<AspNetUsers> GetCurrentUser(ClaimsPrincipal claim) => _userManager.GetUserAsync(claim);
+        public AspNetUsers GetCurrentUser(ClaimsPrincipal claim)  => _userCtx.ApplicationUsers
+            .Include(u => u.Followers)
+                .ThenInclude(f => f.Follower)
+            .Include(u => u.Followings)
+                .ThenInclude(f => f.Following)
+            .FirstOrDefault(u => u.UserName == claim.Identity.Name);
 
         public AspNetUsers GetUserById(string id) => _userCtx.ApplicationUsers.FirstOrDefault(u => u.Id == id);
 
-        public AspNetUsers GetUserByUsername(string username) => _userCtx.ApplicationUsers.FirstOrDefault(u => u.UserName == username);
+        public AspNetUsers GetUserByUsername(string username) => _userCtx.ApplicationUsers
+            .Include(u => u.Followers)
+                .ThenInclude(f => f.Follower)
+            .Include(u => u.Followings)
+                .ThenInclude(f => f.Following)
+            .FirstOrDefault(u => u.UserName == username);
     }
 }

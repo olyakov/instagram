@@ -11,6 +11,6 @@ namespace Instagram.Services
     {
         AspNetUsers GetUserById(string id);
         AspNetUsers GetUserByUsername(string username);
-        Task<AspNetUsers> GetCurrentUser(ClaimsPrincipal claim);
+        AspNetUsers GetCurrentUser(ClaimsPrincipal claim);
     }
 }
