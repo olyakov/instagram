@@ -9,5 +9,6 @@ namespace Instagram.Models
     public class GalleryIndexModel
     {
         public IEnumerable<GalleryDetailModel> Posts { get; set; }
+        public AspNetUsers User { get; set; }
     }
 }

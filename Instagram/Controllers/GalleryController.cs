@@ -18,11 +18,13 @@ namespace Instagram.Controllers
     public class GalleryController : Controller
     {
         private readonly IPost _postService;
+        private readonly IUser _userService;
 
 
-        public GalleryController(IPost postService)
+        public GalleryController(IPost postService, IUser userService)
         {
             _postService = postService;
+            _userService = userService;
         }
 
 
@@ -42,7 +44,8 @@ namespace Instagram.Controllers
             
             var model = new GalleryIndexModel()
             {
-                Posts = posts
+                Posts = posts,
+                User = _userService.GetCurrentUser(HttpContext.User).Result
             };
 
             return View(model);

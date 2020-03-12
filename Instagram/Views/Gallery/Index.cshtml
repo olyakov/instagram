@@ -1,6 +1,28 @@
 ﻿@model Instagram.Models.GalleryIndexModel
 
+
 <div class="conteiner body-content">
+    <div class="rela-block profile-card"> 
+        <div class="profile-pic" id="profile_pic" style="background-image: url(http://pbs.twimg.com/media/CdbiubzVIAANj8J.jpg)"></div> 
+        <div class="rela-block profile-name-container"> 
+            <div class="rela-block user-name" id="user_name">@Model.User.UserName</div> 
+            <div class="rela-block user-desc" id="user_description">User Description about user here</div> 
+        </div> 
+        <div class="rela-block profile-card-stats"> 
+            <div class="floated profile-stat works" id="num_works"> 
+                @Model.Posts.Count()
+                <br> 
+            </div> 
+            <div class="floated profile-stat followers" id="num_followers"> 
+                @Model.User.Followers.Count()
+                <br> 
+            </div> 
+            <div class="floated profile-stat following" id="num_following">
+                @Model.User.Followings.Count()
+                <br>
+            </div> 
+        </div> 
+    </div>
     <div class="row gallery-content">
         @foreach (var post in Model.Posts)
         {

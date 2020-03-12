@@ -13,7 +13,8 @@
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
         <link rel="stylesheet" href="~/css/insta.css" />
-        <
+        <link rel="stylesheet" href="~/css/profile.css" />
+        
         <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
     </environment>
     <environment exclude="Development">
@@ -53,7 +54,6 @@
         <ul>
             <li>
                 <a asp-route-username="@UserManager.GetUserName(User)" asp-controller="Gallery" asp-action="Index"><img src='https://images.pexels.com/photos/5256/city-cars-road-houses.jpg?auto=compress&cs=tinysrgb&h=750&w=1260'>@UserManager.GetUserName(User)</a>
-                 
             </li>
             <li><a href='#'>Log in</a></li>
             <li><a href='#'>Sign up</a></li>

@@ -54,7 +54,8 @@ namespace Instagram.Controllers
 
             var model = new GalleryIndexModel()
             {
-                Posts = posts
+                Posts = posts,
+                User = _userService.GetCurrentUser(HttpContext.User).Result
             };
 
             return View(model);
