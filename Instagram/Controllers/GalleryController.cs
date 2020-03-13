@@ -19,21 +19,23 @@ namespace Instagram.Controllers
     {
         private readonly IPost _postService;
         private readonly IUser _userService;
+        private readonly IFollow _followService;
 
-
-        public GalleryController(IPost postService, IUser userService)
+        public GalleryController(IPost postService, IUser userService, IFollow followService)
         {
             _postService = postService;
             _userService = userService;
+            _followService = followService;
         }
 
 
         [Route("/{username?}")]
         public IActionResult Index(string username)
         {
-            if (username == null)
+            var current_user = _userService.GetCurrentUser(HttpContext.User);
+            if (username == null || username == "Home")
             {
-                username = User.FindFirst(ClaimTypes.Name).Value;
+                username = current_user.UserName;
             }
             var postList = _postService.GetAllByUsername(username);
             List<GalleryDetailModel> posts = new List<GalleryDetailModel>();
@@ -45,7 +47,8 @@ namespace Instagram.Controllers
             var model = new GalleryIndexModel()
             {
                 Posts = posts,
-                User = _userService.GetCurrentUser(HttpContext.User).Result
+                User = _userService.GetUserByUsername(username),
+                IsFollow = _followService.GetFollow(current_user.Id, _userService.GetUserByUsername(username).Id) == null ? false : true 
             };
 
             return View(model);
@@ -62,10 +65,10 @@ namespace Instagram.Controllers
                 Created = post.Created,
                 Url = post.Url,
                 Tags = post.Tags.Select(t => t.Title).ToList(),
-                Likes = post.Likes == null ? new List<Like>() : post.Likes.ToList(),
-                Dislikes = post.Dislikes == null ? new List<Dislike>() : post.Dislikes.ToList(),
-                Comments = post.Comments == null ? new List<Comment>() : post.Comments.ToList(),
-                IsSetLike = post.Likes == null ? false : !post.Likes.Any(l => l.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value) ? false : true
+                Likes = post.Likes.ToList(),
+                Dislikes = post.Dislikes.ToList(),
+                Comments = post.Comments.ToList(),
+                IsSetLike = !post.Likes.Any(l => l.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value) ? false : true
             };
             return View(model);
         }

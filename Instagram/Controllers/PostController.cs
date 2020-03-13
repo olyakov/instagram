@@ -12,6 +12,7 @@ using Instagram.Services;
 using System.Security.Claims;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Instagram.Controllers
 {
@@ -19,7 +20,7 @@ namespace Instagram.Controllers
     {
         public int PostId { get; set; }
     }
-
+    [Authorize]
     public class PostController : Controller
     {
         private readonly IPost _postService;
@@ -55,7 +56,7 @@ namespace Instagram.Controllers
             var model = new GalleryIndexModel()
             {
                 Posts = posts,
-                User = _userService.GetCurrentUser(HttpContext.User).Result
+                User = _userService.GetCurrentUser(HttpContext.User)
             };
 
             return View(model);
@@ -65,7 +66,7 @@ namespace Instagram.Controllers
         public async Task<IActionResult> SetLike(LikeDto dto)
         {
             var post = _postService.GetById(dto.PostId);
-            var user = _userService.GetCurrentUser(HttpContext.User).Result;
+            var user = _userService.GetCurrentUser(HttpContext.User);
             await _raitingService.SetLike(post, user);
             return Ok();
         }
