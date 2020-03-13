@@ -1,6 +1,8 @@
 ﻿@using Instagram.Controllers
 @using Microsoft.CodeAnalysis.CSharp.Syntax
+
 @model Instagram.Models.GalleryDetailModel
+
 
 
 <div class="container body-content">
@@ -21,19 +23,13 @@
                     @Model.Description
                 </p>
                 <div class="post-detail-meta">
-                    @if (Model.IsSetLike)
-                    {
-                        <a style="cursor: pointer; color: black">
-                            <i data-post-id="@Model.Id" class="fa fa-heart fa-lg red-heart js-toggle" aria-hidden="true"></i>
-                        </a>
-                    }
-                    else
-                    {
-                        <a style="cursor: pointer; color: black">
-                            <i data-post-id="@Model.Id" class="fa fa-heart-o fa-lg js-toggle" aria-hidden="true"></i>
-                        </a>
-                    }
-                    <span class="lg-like-txt-post" style="font-weight:bold">@Model.Likes.Count likes</span>
+                    <a class="icons-href">
+                        <i data-post-id="@Model.Id" class="fa @(Model.IsSetLike ? "fa-heart" : "fa-heart-o") fa-lg @(Model.IsSetLike ? "red-heart" : "") js-like" @(Model.IsSetLike ? "liked" : "") aria-hidden="true"></i>
+                    </a>
+
+                    <a data-toggle="modal" data-target="#LikeModal" class="icons-href">
+                        <span id="likes" class="lg-like-txt-post" style="font-weight:bold">@Model.Likes.Count likes</span>
+                    </a>
                     &emsp;
                     <a href="#" class="icons-href">
                         <i class="fa fa-comment-o fa-lg"></i>
@@ -42,7 +38,7 @@
                     <hr>
                     <span>@Model.Created.ToLongDateString()</span>
                 </div>
-                <hr/>
+                <hr />
                 <div class='comment-section'>
                     <input type='text' id='cmnt' placeholder='Add a comment...'>
                     <span class='dot02'></span>
@@ -58,14 +54,58 @@
     </div>
 </div>
 
+<div class="modal" id="LikeModal" tabindex="-1" role="dialog" aria-labelledby="LikeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="LikeModalLabel">Likes</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                    @foreach (var like in Model.Likes)
+                    {
+                        <div class='top-insta'>
+                            <a asp-route-username="@like.User.UserName" asp-controller="Gallery" asp-action="Index"><img src='https://images.pexels.com/photos/5256/city-cars-road-houses.jpg?auto=compress&cs=tinysrgb&h=750&w=1260'></a>
+                            <a asp-route-username="@like.User.UserName" asp-controller="Gallery" asp-action="Index" class='user'>@like.User.UserName</a>
+                            <span class='dot'></span>
+                        </div>
+                    }
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @section scripts
     {
     <script>
         $(document).ready(function () {
-            $(".js-toggle").click(function (e) {
-                var id = $(e.target).attr("data-post-id");
+            $(".js-like").click(function (e) {
+
+                var icon = $(e.target)
+                var id = $(icon).attr("data-post-id");
+
                 $.post("/Post/SetLike", { postId: id })
-                    .done(() => window.location.href = "/Gallery/Detail/" + id);
+                    .done(function () {
+
+                        var count = parseInt($("#likes").html());
+
+                        if ($(icon)[0].hasAttribute("liked")) {
+
+                            $("#likes").html(count - 1 + " likes");
+                            $(icon).removeAttr("liked");
+                            $(icon).removeClass("fa-heart").addClass("fa-heart-o");
+                            $(icon).removeClass("red-heart");
+                        } else {
+
+                            $("#likes").html(count + 1 + " likes");
+                            $(icon).attr("liked", "1");
+                            $(icon).removeClass("fa-heart-o").addClass("fa-heart");
+                            $(icon).addClass("red-heart");
+                        }
+                    });
             });
         });
     </script>

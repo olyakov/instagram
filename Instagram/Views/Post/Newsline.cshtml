@@ -8,6 +8,7 @@
             <div class='top-insta'>
                 <a asp-route-username="@post.User.UserName" asp-controller="Gallery" asp-action="Index"><img src='https://images.pexels.com/photos/5256/city-cars-road-houses.jpg?auto=compress&cs=tinysrgb&h=750&w=1260'></a>
                 <a asp-route-username="@post.User.UserName" asp-controller="Gallery" asp-action="Index" class='user'>@post.User.UserName</a>
+
                 <span class='dot'></span>
 
             </div>
@@ -23,21 +24,15 @@
             <div class='footer'>
 
                 <div class='react'>
-                    @if (post.IsSetLike)
-                    {
-                        <a class="icons-href" style="text-decoration: none">
-                            <i data-post-id="@post.Id" class="fa fa-heart fa-2x red-heart js-toggle" aria-hidden="true"></i>
-                        </a>
-                    }
-                    else
-                    {
-                        <a class="icons-href" style="text-decoration: none; color: black">
-                            <i data-post-id="@post.Id" class="fa fa-heart-o fa-2x js-toggle" aria-hidden="true"></i>
-                        </a>
-                    }
-                    <span class="lg-like-txt-post" style="font-weight:bold">@post.Likes.Count likes</span>
+                    <a class="icons-href">
+                        <i data-post-id="@post.Id" class="fa @(post.IsSetLike ? "fa-heart" : "fa-heart-o") fa-2x @(post.IsSetLike ? "red-heart" : "") js-like" @(post.IsSetLike ? "liked" : "") aria-hidden="true"></i>
+                    </a>
+                    <a data-toggle="modal" data-target="#@post.Id" class="icons-href">
+                        <span id="@("like"+post.Id)" class="lg-like-txt-post" style="font-weight:bold">@post.Likes.Count likes</span>
+                    </a>
+                    
                     &emsp;
-                    <a href="#" style="text-decoration: none; color: black">
+                    <a href="#" class="icons-href">
                         <i class="fa fa-comment-o fa-2x"></i>
                     </a>
                     <span class="lg-like-txt-post" style="font-weight:bold">@post.Comments.Count comments</span>
@@ -58,18 +53,64 @@
 
             </div> <!-- end Footer -->
         </div> <!-- end Insta -->
+
+        <div class="modal" id="@post.Id" tabindex="-1" role="dialog" aria-labelledby="LikeModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="LikeModalLabel">Likes</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        @foreach (var like in post.Likes)
+                        {
+                            <div class='top-insta'>
+                                <a asp-route-username="@like.User.UserName" asp-controller="Gallery" asp-action="Index"><img src='https://images.pexels.com/photos/5256/city-cars-road-houses.jpg?auto=compress&cs=tinysrgb&h=750&w=1260'></a>
+                                <a asp-route-username="@like.User.UserName" asp-controller="Gallery" asp-action="Index" class='user'>@like.User.UserName</a>
+                                <span class='dot'></span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
     }
 </section>
+
 
 
 @section scripts
     {
     <script>
         $(document).ready(function () {
-            $(".js-toggle").click(function (e) {
-                var id = $(e.target).attr("data-post-id");
+            $(".js-like").click(function (e) {
+
+                var icon = $(e.target)
+                var id = $(icon).attr("data-post-id");
+
                 $.post("/Post/SetLike", { postId: id })
-                    .done(() => window.location.href = "/Gallery/Detail/" + id);
+                    .done(function () {
+
+                        var like_id = ("#" + "like" + id)
+                        var count = parseInt($(like_id).html());
+
+                        if ($(icon)[0].hasAttribute("liked")) {
+
+                            $(like_id).html(count - 1 + " likes");
+                            $(icon).removeAttr("liked");
+                            $(icon).removeClass("fa-heart").addClass("fa-heart-o");
+                            $(icon).removeClass("red-heart");
+                        } else {
+
+                            $(like_id).html(count + 1 + " likes");
+                            $(icon).attr("liked", "1");
+                            $(icon).removeClass("fa-heart-o").addClass("fa-heart");
+                            $(icon).addClass("red-heart");
+                        }
+                    });
             });
         });
     </script>

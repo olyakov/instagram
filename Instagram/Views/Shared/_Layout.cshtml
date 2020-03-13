@@ -53,7 +53,10 @@
     <div class="list">
         <ul>
             <li>
-                <a asp-route-username="@UserManager.GetUserName(User)" asp-controller="Gallery" asp-action="Index"><img src='https://images.pexels.com/photos/5256/city-cars-road-houses.jpg?auto=compress&cs=tinysrgb&h=750&w=1260'>@UserManager.GetUserName(User)</a>
+                <a asp-route-username="@UserManager.GetUserName(User)" asp-controller="Gallery" asp-action="Index">
+                    <img src='https://images.pexels.com/photos/5256/city-cars-road-houses.jpg?auto=compress&cs=tinysrgb&h=750&w=1260'>
+                    @UserManager.GetUserName(User)
+                </a>
             </li>
             <li><a href='#'>Log in</a></li>
             <li><a href='#'>Sign up</a></li>

@@ -1,4 +1,4 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\
 for details on configuring this project to bundle and minify static web assets. */
 .gallery-content {
     padding: 20px 80px 10px 80px;
@@ -39,7 +39,7 @@ for details on configuring this project to bundle and minify static web assets. 
 .submit {
     padding: 2%;
 }
- 
+
 .btn-file {
     margin: 6px;
 }
@@ -77,7 +77,8 @@ for details on configuring this project to bundle and minify static web assets. 
 
 .icons-href {
     text-decoration: none !important;
-    color: black;
+    cursor: pointer !important;
+    color: black !important;
 }
 
 .post-img {
@@ -90,6 +91,12 @@ for details on configuring this project to bundle and minify static web assets. 
     border-color: #c8d6e5;
 }
 
+.navbar-inverse .navbar-nav > .open > a,
+ .navbar-inverse .navbar-nav > .open > a:hover,
+  .navbar-inverse .navbar-nav > .open > a:focus{
+  background-color: #b9b9b9;
+}
+
 body {
     padding-top: 50px;
     padding-bottom: 20px;
@@ -100,7 +107,7 @@ body {
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
-    padding-top: 15px;
+    padding-top: 30px;
 }
 
 /* Carousel */
