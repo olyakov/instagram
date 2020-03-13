@@ -1,6 +1,7 @@
 ﻿using Instagram.Data;
 using Instagram.Data.Model;
 using Instagram.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;   
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Instagram
 {
@@ -34,7 +37,7 @@ namespace Instagram
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            // services.AddDbContext<InstagramDbContext>()
+
             services.AddDbContext<InstagramDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -46,12 +49,14 @@ namespace Instagram
                     options.User.RequireUniqueEmail = false;
                 })
                 .AddEntityFrameworkStores<IdentityDbContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddDefaultUI();
 
 
             services.AddScoped<IPost, PostServices>();
             services.AddScoped<IUser, UserService>();
             services.AddScoped<IRaiting, RaitingService>();
+            services.AddScoped<IFollow, FollowServise>();
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
