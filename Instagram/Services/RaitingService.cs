@@ -24,7 +24,6 @@ namespace Instagram.Services
 
             Like like = new Like()
             {
-                User = user,
                 UserId = user.Id,
                 Post = post
             };

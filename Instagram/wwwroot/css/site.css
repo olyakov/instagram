@@ -91,6 +91,17 @@ for details on configuring this project to bundle and minify static web assets. 
     border-color: #c8d6e5;
 }
 
+.modal{
+    display: block !important;
+}
+.modal-dialog{
+    overflow-y: initial !important
+}
+.modal-body{
+    height: 250px;
+    overflow-y: auto;
+}
+
 .navbar-inverse .navbar-nav > .open > a,
  .navbar-inverse .navbar-nav > .open > a:hover,
   .navbar-inverse .navbar-nav > .open > a:focus{

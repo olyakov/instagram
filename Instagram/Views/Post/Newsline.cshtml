@@ -15,7 +15,7 @@
             <div class='post'>
                 <div class="overlay">
                     <a>
-                        <span data-post-id="@post.Id" class="js-toggle">
+                        <span data-post-id="@post.Id" class="js-big-heart">
                         </span>
                     </a>
                 </div>
@@ -25,12 +25,12 @@
 
                 <div class='react'>
                     <a class="icons-href">
-                        <i data-post-id="@post.Id" class="fa @(post.IsSetLike ? "fa-heart" : "fa-heart-o") fa-2x @(post.IsSetLike ? "red-heart" : "") js-like" @(post.IsSetLike ? "liked" : "") aria-hidden="true"></i>
+                        <i data-post-id="@post.Id" id="@("heart"+post.Id)" class="fa @(post.IsSetLike ? "fa-heart" : "fa-heart-o") fa-2x @(post.IsSetLike ? "red-heart" : "") js-like" @(post.IsSetLike ? "liked" : "") aria-hidden="true"></i>
                     </a>
-                    <a data-toggle="modal" data-target="#@post.Id" class="icons-href">
-                        <span id="@("like"+post.Id)" class="lg-like-txt-post" style="font-weight:bold">@post.Likes.Count likes</span>
+                    <a class="icons-href">
+                        <span id="@("like"+post.Id)" data-post-like-id="@post.Id" class="lg-like-txt-post js-like-count" style="font-weight:bold">@post.Likes.Count likes</span>
                     </a>
-                    
+
                     &emsp;
                     <a href="#" class="icons-href">
                         <i class="fa fa-comment-o fa-2x"></i>
@@ -44,7 +44,7 @@
                 <div>
                     @post.Description
                 </div>
-                <hr/>
+                <hr />
                 <span>@post.Created.ToLongDateString()</span>
                 <div class='comment-section'>
                     <input type='text' id='cmnt' placeholder='Add a comment...'>
@@ -54,24 +54,17 @@
             </div> <!-- end Footer -->
         </div> <!-- end Insta -->
 
-        <div class="modal" id="@post.Id" tabindex="-1" role="dialog" aria-labelledby="LikeModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
+        <div id="@("modal"+post.Id)" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" style="overflow-y: scroll; max-height:85%;  margin-top: 50px; width: 400px;">
+
                     <div class="modal-header">
-                        <h4 class="modal-title" id="LikeModalLabel">Likes</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <h4 class="modal-title" id="modal-header">Likes</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
-                    <div class="modal-body">
-                        @foreach (var like in post.Likes)
-                        {
-                            <div class='top-insta'>
-                                <a asp-route-username="@like.User.UserName" asp-controller="Gallery" asp-action="Index"><img src='https://images.pexels.com/photos/5256/city-cars-road-houses.jpg?auto=compress&cs=tinysrgb&h=750&w=1260'></a>
-                                <a asp-route-username="@like.User.UserName" asp-controller="Gallery" asp-action="Index" class='user'>@like.User.UserName</a>
-                                <span class='dot'></span>
-                            </div>
-                        }
+
+                    <div class="modal-body" id="@("modal-content"+post.Id)">
+
                     </div>
                 </div>
             </div>
@@ -86,6 +79,18 @@
     {
     <script>
         $(document).ready(function () {
+            $(".js-like-count").click(function (e) {
+
+                var id = $(e.target).attr("data-post-like-id");
+                $.get("/Post/GetLikers", { postId: id })
+                    .done(response => {
+                        var modal_id = ("#" + "modal" + id)
+                        var modal_content = ("#" + "modal-content" + id)
+                        $(modal_content).html(response);
+                        $(modal_id).modal("show");
+                    })
+                    .fail(() => console.log("Fail"));
+            });
             $(".js-like").click(function (e) {
 
                 var icon = $(e.target)
@@ -109,6 +114,33 @@
                             $(icon).attr("liked", "1");
                             $(icon).removeClass("fa-heart-o").addClass("fa-heart");
                             $(icon).addClass("red-heart");
+                        }
+                    });
+            });
+            $(".js-big-heart").click(function (e) {
+
+                var big_heart = $(e.target)
+                var id = $(big_heart).attr("data-post-id");
+
+                $.post("/Post/SetLike", { postId: id })
+                    .done(function () {
+
+                        var like_id = ("#" + "like" + id)
+                        var count = parseInt($(like_id).html());
+                        small_heart = ('#' + "heart" + id)
+
+                        if ($(small_heart)[0].hasAttribute("liked")) {
+
+                            $(like_id).html(count - 1 + " likes");
+                            $(small_heart).removeAttr("liked");
+                            $(small_heart).removeClass("fa-heart").addClass("fa-heart-o");
+                            $(small_heart).removeClass("red-heart");
+                        } else {
+
+                            $(like_id).html(count + 1 + " likes");
+                            $(small_heart).attr("liked", "1");
+                            $(small_heart).removeClass("fa-heart-o").addClass("fa-heart");
+                            $(small_heart).addClass("red-heart");
                         }
                     });
             });

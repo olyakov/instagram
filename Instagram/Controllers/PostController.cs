@@ -12,6 +12,7 @@ using Instagram.Services;
 using System.Security.Claims;
 using System.Collections.Generic;
 using System.Linq;
+using Instagram.Data.Model;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Instagram.Controllers
@@ -29,8 +30,8 @@ namespace Instagram.Controllers
         private readonly IHostingEnvironment _he;
 
 
-        public PostController(IPost postService, IRaiting raitingService, IHostingEnvironment he,
-            IUser userService)
+        public PostController(IPost postService, IRaiting raitingService,
+            IHostingEnvironment he, IUser userService)
         {
             _he = he;
             _postService = postService;
@@ -71,6 +72,33 @@ namespace Instagram.Controllers
             return Ok();
         }
 
+
+        [HttpGet]
+        public ActionResult GetLikers(LikeDto dto)
+        {
+            var post = _postService.GetById(dto.PostId);
+            var user = _userService.GetUserByUsername(post.User.UserName);
+            var likersIds = post.Likes
+                .Select(f => f.UserId)
+                .ToList();
+
+            var likers = post.Likes
+                .Select(r => _userService.GetUserById(r.UserId))
+                .ToList();
+
+            var followings = user.Followings
+                .Where(f => likersIds.Contains(f.FollowingId));
+
+            var viewModel = new PostUserViewModel()
+            {
+                Followings = followings,
+                UserId = user.Id,
+                Users = likers
+            };
+
+            return PartialView("_UserList", viewModel);
+        }
+
         [HttpPost]
         public async Task<IActionResult> UploadNewPost(IFormFile pic, string tags, string description, string title)
         {
@@ -82,5 +110,6 @@ namespace Instagram.Controllers
             }
             return RedirectToAction("Index", "Gallery");
         }
+
     }
 }
