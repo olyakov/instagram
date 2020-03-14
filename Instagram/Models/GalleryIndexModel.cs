@@ -10,5 +10,6 @@ namespace Instagram.Models
     {
         public IEnumerable<GalleryDetailModel> Posts { get; set; }
         public AspNetUsers User { get; set; }
+        public bool IsFollow { get; set; }
     }
 }

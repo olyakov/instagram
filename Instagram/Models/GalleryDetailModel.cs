@@ -21,5 +21,6 @@ namespace Instagram.Models
         public AspNetUsers User { get; set; }
         
         public bool IsSetLike { get; set; }
+        public bool IsFollow { get; set; }
     }
 }
