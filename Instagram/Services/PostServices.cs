@@ -33,7 +33,8 @@ namespace Instagram.Services
         public IEnumerable<Post> GetAll() => _ctx.Posts
             .Include(post => post.Tags)
             .Include(post => post.User)
-            .Include(post => post.Likes);
+            .Include(post => post.Likes)
+            .Include(post => post.Comments);
 
 
         public IEnumerable<Post> GetAllCurrentUser()

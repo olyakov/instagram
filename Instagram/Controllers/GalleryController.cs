@@ -74,8 +74,9 @@ namespace Instagram.Controllers
                 Likes = post.Likes.ToList(),
                 Dislikes = post.Dislikes.ToList(),
                 Comments = post.Comments.ToList(),
-                IsSetLike = !post.Likes.Any(l => l.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value) ? false : true
-            };
+                IsSetLike = !post.Likes.Any(l => l.UserId == User.FindFirst(ClaimTypes.NameIdentifier).Value) ? false : true,
+                User = _userService.GetCurrentUser(HttpContext.User)
+        };
             return View(model);
         }
     }

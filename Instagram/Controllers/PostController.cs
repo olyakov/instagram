@@ -14,13 +14,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Instagram.Data.Model;
 using Microsoft.AspNetCore.Authorization;
+using Instagram.Dtos;
+using System;
 
 namespace Instagram.Controllers
 {
-    public class PostDto
-    {
-        public int PostId { get; set; }
-    }
+
     [Authorize]
     public class PostController : Controller
     {
@@ -28,17 +27,20 @@ namespace Instagram.Controllers
         private readonly IRaiting _raitingService;
         private readonly IUser _userService;
         private readonly IFollow _followService;
+        private readonly IComment _commentService;
+
         private readonly IHostingEnvironment _he;
 
 
-        public PostController(IPost postService, IRaiting raitingService,
-            IHostingEnvironment he, IUser userService, IFollow followService)
+        public PostController(IPost postService, IRaiting raitingService,IHostingEnvironment he,
+            IUser userService, IFollow followService, IComment commentService)
         {
             _he = he;
             _postService = postService;
             _raitingService = raitingService;
             _userService = userService;
             _followService = followService;
+            _commentService = commentService;
         }
 
         public IActionResult Upload()
@@ -113,6 +115,21 @@ namespace Instagram.Controllers
         {
             await _postService.Remove(id);
             return RedirectToAction("Index", "Gallery");
+        }
+
+        [HttpPost]
+        [Route("/api/post/comment")]
+        public ActionResult AddComment(CommentDto dto)
+        {
+            var comment = new Comment
+            {
+                PostId = dto.PostId,
+                UserId = dto.CommenterId,
+                Content = dto.Message,
+                Created = DateTime.Now
+            };
+            _commentService.AddComment(comment);
+            return Ok();
         }
 
     }
