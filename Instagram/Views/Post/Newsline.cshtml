@@ -35,7 +35,7 @@
                     <a href="#" class="icons-href">
                         <i class="fa fa-comment-o fa-2x"></i>
                     </a>
-                    <span class="lg-like-txt-post" style="font-weight:bold">@post.Comments.Count comments</span>
+                    <span id="@("cmnt-count"+post.Id)" class="lg-like-txt-post" style="font-weight:bold">@post.Comments.Count comments</span>
                 </div>
 
                 <div class='caption'>
@@ -47,7 +47,7 @@
                 <hr />
                 <span>@post.Created.ToLongDateString()</span>
                 <div class='comment-section'>
-                    <input type='text' id='cmnt' placeholder='Add a comment...'>
+                    <input type='text' id="cmnt" data-post-cmnt-id="@post.Id" class="js-cmnt" placeholder='Add a comment...'>
                     <span class='dot02'></span>
                 </div>
 
@@ -80,6 +80,30 @@
     {
     <script>
         $(document).ready(function () {
+
+            $('.js-cmnt').keydown(function (e) {
+                if (e.keyCode == 13) {
+
+                    var id = $(e.target).attr("data-post-cmnt-id");
+                    var cmnt = $(e.target);
+
+                    var cmnt_id = ("#" + "cmnt-count" + id)
+                    var cmnt_count = parseInt($(cmnt_id).html());
+                    var value = $(cmnt_id).val();
+
+                    $.post("/api/post/comment",
+                        {
+                            message: $(cmnt).val(),
+                            commenterId: "@Model.User.Id",
+                            postId: id
+                        });
+
+                    $(cmnt_id).html(cmnt_count + 1 + " comments");
+                    console.log("Press enter:" + value);
+                    $(cmnt).val("");
+                }
+            });
+
             $(".js-like-count").click(function (e) {
 
                 var id = $(e.target).attr("data-post-like-id");

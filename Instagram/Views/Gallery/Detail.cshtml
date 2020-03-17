@@ -27,7 +27,7 @@
                 </p>
                 <div class="post-detail-meta">
                     <a class="icons-href">
-                        <i data-post-id="@Model.Id" class="fa @(Model.IsSetLike ? "fa-heart" : "fa-heart-o") fa-lg @(Model.IsSetLike ? "red-heart" : "") js-like" @(Model.IsSetLike ? "liked" : "") aria-hidden="true"></i>
+                        <i data-post-id="@Model.Id" class="fa @(Model.IsSetLike ? "fa-heart" : "fa-heart-o") fa-2x @(Model.IsSetLike ? "red-heart" : "") js-like" @(Model.IsSetLike ? "liked" : "") aria-hidden="true"></i>
                     </a>
 
                     <a class="icons-href">
@@ -35,9 +35,9 @@
                     </a>
                     &emsp;
                     <a href="#" class="icons-href">
-                        <i class="fa fa-comment-o fa-lg"></i>
+                        <i class="fa fa-comment-o fa-2x"></i>
                     </a>
-                    <span class="lg-like-txt-post" style="font-weight:bold">@Model.Comments.Count comments</span>
+                    <span id="cmnt_count" class="lg-like-txt-post" style="font-weight:bold">@Model.Comments.Count comments</span>
                     <hr>
                     <span>@Model.Created.ToLongDateString()</span>
                 </div>
@@ -81,6 +81,23 @@
     {
     <script>
         $(document).ready(function () {
+
+            $('#cmnt').keydown(function (e) {
+                console.log("bykva");
+                if (e.keyCode == 13) {
+                    var value = $('#cmnt').val();
+                    var count = parseInt($("#cmnt_count").html());
+                    $.post("/api/post/comment",
+                        {
+                            message: $("#cmnt").val(),
+                            commenterId: "@Model.User.Id",
+                            postId: "@Model.Id"
+                        });
+                    $("#cmnt_count").html(count + 1 + " comments");
+                    console.log("Press enter:" + value);
+                    $('#cmnt').val("");
+                }
+            });
 
             $(".js-like-count").click(function (e) {
 
