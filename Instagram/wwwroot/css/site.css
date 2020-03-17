@@ -1,7 +1,7 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\
 for details on configuring this project to bundle and minify static web assets. */
 .gallery-content {
-    padding: 20px 80px 10px 80px;
+    padding: 20px 80px 10px 120px;
 }
 
 .gallery-post {
@@ -55,7 +55,7 @@ for details on configuring this project to bundle and minify static web assets. 
 }
 
 .drop-shadow {
-    box-shadow: 0 5px 5px rgba(0,0,0,0.2), 0 1px 1px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 6px -2px rgba(0,0,0,0.26),  0 4px 6px -2px rgba(0,0,0,0.26);
 }
 
 .red-heart {
@@ -92,13 +92,13 @@ for details on configuring this project to bundle and minify static web assets. 
 }
 
 
-.modal-dialog{
-    overflow-y: initial !important
-}
 .modal-body{
     height: 250px;
-    overflow-y: auto;
+    overflow-y: auto !important;
 }
+
+.modal.fade .modal-dialog.modal-dialog-zoom {-webkit-transform: translate(0,0)scale(.5);transform: translate(0,0)scale(.5);}
+.modal.show .modal-dialog.modal-dialog-zoom {-webkit-transform: translate(0,0)scale(1);transform: translate(0,0)scale(1);}
 
 .navbar-inverse .navbar-nav > .open > a,
  .navbar-inverse .navbar-nav > .open > a:hover,

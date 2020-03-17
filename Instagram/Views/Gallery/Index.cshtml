@@ -63,17 +63,19 @@
     </div>
 </div>
 
-<div class="modal fade" id="follow-modal">
-    <div class="modal-dialog">
-        <div class="modal-content" style="overflow-y: scroll; max-height:85%;  margin-top: 50px; width: 400px;">
 
+<div class="modal fade" id="follow-modal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="modal-header">Likes</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="modal-title">Likes</h4>
             </div>
+            <div class="modal-body" id="follow-modal-content" style="overflow-y: scroll; max-height:85%;">
 
-            <div class="modal-body" id="follow-modal-content">
-
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -90,7 +92,7 @@
                     .done(response => {
                         $("#follow-modal-content").html(response);
                         $("#follow-modal").modal("show");
-                        $("#modal-header").text("Followers")
+                        $("#modal-title").text("Followers")
                     })
                     .fail(() => console.log("fail"));
             });
@@ -101,7 +103,7 @@
                     .done(response => {
                         $("#follow-modal-content").html(response);
                         $("#follow-modal").modal("show");
-                        $("#modal-header").text("Followings")
+                        $("#modal-title").text("Followings")
                     })
                     .fail(() => console.log("fail"));
             });

@@ -54,17 +54,18 @@
             </div> <!-- end Footer -->
         </div> <!-- end Insta -->
 
-        <div id="@("modal"+post.Id)" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content" style="overflow-y: scroll; max-height:85%;  margin-top: 50px; width: 400px;">
-
+        <div class="modal fade" id="@("modal"+post.Id)" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
                     <div class="modal-header">
-                        <h4 class="modal-title" id="modal-header">Likes</h4>
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" id="modal-title">Likes</h4>
                     </div>
+                    <div class="modal-body" id="@("modal-content"+post.Id)" style="overflow-y: scroll; max-height:85%;">
 
-                    <div class="modal-body" id="@("modal-content"+post.Id)">
-
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>

@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Instagram.Controllers
 {
-    public class LikeDto
+    public class PostDto
     {
         public int PostId { get; set; }
     }
@@ -66,7 +66,7 @@ namespace Instagram.Controllers
         }
  
         [HttpPost]
-        public async Task<IActionResult> SetLike(LikeDto dto)
+        public async Task<IActionResult> SetLike(PostDto dto)
         {
             var post = _postService.GetById(dto.PostId);
             var user = _userService.GetCurrentUser(HttpContext.User);
@@ -76,7 +76,7 @@ namespace Instagram.Controllers
 
 
         [HttpGet]
-        public ActionResult GetLikers(LikeDto dto)
+        public ActionResult GetLikers(PostDto dto)
         {
             var post = _postService.GetById(dto.PostId);
             var user = _userService.GetUserByUsername(post.User.UserName);
@@ -95,6 +95,7 @@ namespace Instagram.Controllers
         }
 
         [HttpPost]
+        [Route("/post/add")]
         public async Task<IActionResult> UploadNewPost(IFormFile pic, string tags, string description, string title)
         {
             if (pic != null)
@@ -103,6 +104,14 @@ namespace Instagram.Controllers
                 pic.CopyTo(new FileStream(filename, FileMode.Create));
                 await _postService.AddPost(title, tags, description, "/" + Path.GetFileName(pic.FileName));
             }
+            return RedirectToAction("Index", "Gallery");
+        }
+        
+        [HttpDelete]
+        [Route("/remove/{id}")]
+        public async Task<IActionResult> RemovePost(int id)
+        {
+            await _postService.Remove(id);
             return RedirectToAction("Index", "Gallery");
         }
 

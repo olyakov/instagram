@@ -14,7 +14,7 @@ namespace Instagram.Services
         IEnumerable<Post> GetAllByUsername(string username);
         IEnumerable<Post> GetAllCurrentUser();
         Post GetById(int id);
-        Task Remove(Post post);
+        Task Remove(int postId);
         Task AddPost(string title, string tags, string description, string url);
         List<Tag> ParseTags(string tags);
         GalleryDetailModel GetGalleryDetailModel(Post post);

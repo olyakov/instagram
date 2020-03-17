@@ -53,8 +53,9 @@ namespace Instagram.Services
         public Post GetById(int id) => GetAll().FirstOrDefault(p => p.Id == id);
 
 
-        public async Task Remove(Post post)
+        public async Task Remove(int postId)
         {
+            var post = GetById(postId);
             _ctx.Posts.Remove(post);
             await _ctx.SaveChangesAsync();
         }
