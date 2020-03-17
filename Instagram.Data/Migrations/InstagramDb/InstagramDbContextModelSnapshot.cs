@@ -69,7 +69,7 @@ namespace Instagram.Data.Migrations.InstagramDb
 
                     b.Property<DateTime>("Created");
 
-                    b.Property<int>("PostId");
+                    b.Property<int?>("PostId");
 
                     b.Property<string>("UserId")
                         .IsRequired();
@@ -187,8 +187,7 @@ namespace Instagram.Data.Migrations.InstagramDb
                 {
                     b.HasOne("Instagram.Data.Model.Post", "Post")
                         .WithMany("Comments")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("PostId");
 
                     b.HasOne("Instagram.Data.Model.AspNetUsers", "User")
                         .WithMany()
