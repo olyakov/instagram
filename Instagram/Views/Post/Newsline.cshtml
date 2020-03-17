@@ -54,7 +54,7 @@
             </div> <!-- end Footer -->
         </div> <!-- end Insta -->
 
-        <div id="@("modal"+post.Id)" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div id="@("modal"+post.Id)" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content" style="overflow-y: scroll; max-height:85%;  margin-top: 50px; width: 400px;">
 
@@ -89,7 +89,7 @@
                         $(modal_content).html(response);
                         $(modal_id).modal("show");
                     })
-                    .fail(() => console.log("Fail"));
+                    .fail(() => console.log("Kak tak"));
             });
             $(".js-like").click(function (e) {
 

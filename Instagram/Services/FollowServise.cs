@@ -20,10 +20,13 @@ namespace Instagram.Services
             _context.Follows.FirstOrDefault(f => f.FollowerId == followerId &&
                                                     f.FollowingId == followingId);
 
-        public IEnumerable<Follow> GetUserFollows(string userId) =>
-            _context.Follows.Where(f => f.FollowerId == userId);
+        public ICollection<Follow> GetUserFollows(string userId) =>
+            _context.Follows.Where(f => f.FollowerId == userId).ToList();
 
-        public IEnumerable<Follow> GetAll() => _context.Follows;
+        public ICollection<Follow> GetUserFollowings(string userId) =>
+            _context.Follows.Where(f => f.FollowingId == userId).ToList();
+
+        public ICollection<Follow> GetAll() => _context.Follows.ToList();
 
         public bool IsFollow(string followerId, string followingId) =>
             _context.Follows.Any(f => f.FollowingId == followingId &&

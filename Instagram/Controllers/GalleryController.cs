@@ -43,12 +43,18 @@ namespace Instagram.Controllers
             {
                 posts.Add(_postService.GetGalleryDetailModel(post));
             }
-            
+
+            var user = _userService.GetUserByUsername(username);
+            var followers = _followService.GetUserFollows(user.Id);
+            var followings = _followService.GetUserFollowings(user.Id);
+
             var model = new GalleryIndexModel()
             {
                 Posts = posts,
-                User = _userService.GetUserByUsername(username),
-                IsFollow = _followService.GetFollow(current_user.Id, _userService.GetUserByUsername(username).Id) == null ? false : true 
+                User = user,
+                IsFollow = _followService.GetFollow( _userService.GetUserByUsername(username).Id, current_user.Id) == null ? false : true,
+                Followers = followers,
+                Followings = followings
             };
 
             return View(model);

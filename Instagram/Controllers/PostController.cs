@@ -27,16 +27,18 @@ namespace Instagram.Controllers
         private readonly IPost _postService;
         private readonly IRaiting _raitingService;
         private readonly IUser _userService;
+        private readonly IFollow _followService;
         private readonly IHostingEnvironment _he;
 
 
         public PostController(IPost postService, IRaiting raitingService,
-            IHostingEnvironment he, IUser userService)
+            IHostingEnvironment he, IUser userService, IFollow followService)
         {
             _he = he;
             _postService = postService;
             _raitingService = raitingService;
             _userService = userService;
+            _followService = followService;
         }
 
         public IActionResult Upload()
@@ -78,20 +80,13 @@ namespace Instagram.Controllers
         {
             var post = _postService.GetById(dto.PostId);
             var user = _userService.GetUserByUsername(post.User.UserName);
-            var likersIds = post.Likes
-                .Select(f => f.UserId)
-                .ToList();
 
             var likers = post.Likes
                 .Select(r => _userService.GetUserById(r.UserId))
                 .ToList();
-
-            var followings = user.Followings
-                .Where(f => likersIds.Contains(f.FollowingId));
-
+ 
             var viewModel = new PostUserViewModel()
             {
-                Followings = followings,
                 UserId = user.Id,
                 Users = likers
             };
