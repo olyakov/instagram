@@ -58,19 +58,14 @@ namespace Instagram.Controllers
         public IActionResult GetFollowings(FollowDto dto)
         {
             var user = _userService.GetUserByUsername(dto.Username);
-            var followings = _followService.GetUserFollowings(user.Id).Select(f => f.FollowerId);
-
-            List<AspNetUsers> users = new List<AspNetUsers>();
-
-            foreach (var userId in followings)
-            {
-                users.Add(_userService.GetUserById(userId));
-            }
+            var followings = _followService
+                .GetUserFollowings(user.Id)
+                .Select(f => (_userService.GetUserById(f.FollowerId)));
 
             var viewmodel = new PostUserViewModel()
             {
                 UserId = user.Id,
-                Users = users
+                Users = followings
             };
 
             return PartialView("_UserList", viewmodel);
@@ -80,19 +75,14 @@ namespace Instagram.Controllers
         public IActionResult GetFollowers(FollowDto dto)
         {
             var user = _userService.GetUserByUsername(dto.Username);
-            var followers = _followService.GetUserFollows(user.Id).Select(f => f.FollowingId);
-
-            List<AspNetUsers> users = new List<AspNetUsers>();
-
-            foreach (var userId in followers)
-            {
-                users.Add(_userService.GetUserById(userId));
-            }
+            var followers = _followService
+                .GetUserFollows(user.Id)
+                .Select(f => (_userService.GetUserById(f.FollowingId)));
 
             var viewmodel = new PostUserViewModel()
             {
                 UserId = user.Id,
-                Users = users
+                Users = followers
             };
 
             return PartialView("_UserList", viewmodel);
