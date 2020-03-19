@@ -51,12 +51,21 @@ namespace Instagram.Controllers
 
         public IActionResult Newsline()
         {
-            var postList = _postService.GetAll().OrderByDescending(p => p.Created).ToList();
+            var user = _userService.GetCurrentUser(HttpContext.User);
+            var followings = _followService
+                .GetUserFollowings(user.Id)
+                .Select(f => f.FollowerId);
+
+            var posts = _postService
+                .GetAll()
+                .Where(p => followings.Contains(p.UserId))
+                .OrderByDescending(p => p.Created).ToList()
+                .Select(p => _postService.GetGalleryDetailModel(p));
 
             var model = new GalleryIndexModel()
             {
-                Posts = postList.Select(p => _postService.GetGalleryDetailModel(p)),
-                User = _userService.GetCurrentUser(HttpContext.User)
+                Posts = posts,
+                User = user
             };
 
             return View(model);
@@ -134,7 +143,9 @@ namespace Instagram.Controllers
             var post = _postService.GetById(dto.PostId);
             var user = _userService.GetUserByUsername(post.User.UserName);
 
-            var commentors = _commentService.GetPostComments(dto.PostId).OrderByDescending(c => c.Created).ToList();
+            var commentors = _commentService
+                .GetPostComments(dto.PostId)
+                .OrderByDescending(c => c.Created);
 
             var viewModel = new PostCommentorsViewModel()
             {
