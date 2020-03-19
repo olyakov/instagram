@@ -67,23 +67,6 @@
                 <h4 class="modal-title">Likes</h4>
             </div>
             <div class="modal-body" id="like-modal-content">
-               
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="cmnt-modal" role="dialog">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Comments</h4>
-            </div>
-            <div class="modal-body" id="cmnt-modal-content">
 
             </div>
             <div class="modal-footer">
@@ -100,18 +83,16 @@
         $(document).ready(function () {
 
             $('#cmnt').keydown(function (e) {
+                console.log("bykva");
                 if (e.keyCode == 13) {
-
                     var value = $('#cmnt').val();
                     var count = parseInt($("#cmnt_count").html());
-
                     $.post("/api/post/comment",
                         {
                             message: $("#cmnt").val(),
                             commenterId: "@Model.User.Id",
                             postId: "@Model.Id"
                         });
-
                     $("#cmnt_count").html(count + 1 + " comments");
                     console.log("Press enter:" + value);
                     $('#cmnt').val("");
