@@ -34,10 +34,12 @@
                         <span id="likes" data-post-like-id="@Model.Id" class="lg-like-txt-post js-like-count" style="font-weight:bold">@Model.Likes.Count likes</span>
                     </a>
                     &emsp;
-                    <a href="#" class="icons-href">
+                    <a class="icons-href">
                         <i class="fa fa-comment-o fa-2x"></i>
                     </a>
-                    <span id="cmnt_count" class="lg-like-txt-post" style="font-weight:bold">@Model.Comments.Count comments</span>
+                    <a class="icons-href">
+                        <span id="cmnt_count" data-post-cmnt-id="@Model.Id" class="lg-like-txt-post js-cmnt-count" style="font-weight:bold">@Model.Comments.Count comments</span>
+                    </a>
                     <hr>
                     <span>@Model.Created.ToLongDateString()</span>
                 </div>
@@ -76,6 +78,23 @@
     </div>
 </div>
 
+<div class="modal fade" id="cmnt-modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Comments</h4>
+            </div>
+            <div class="modal-body" id="cmnt-modal-content" style="max-height: 80%">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 @section scripts
     {
@@ -83,7 +102,6 @@
         $(document).ready(function () {
 
             $('#cmnt').keydown(function (e) {
-                console.log("bykva");
                 if (e.keyCode == 13) {
                     var value = $('#cmnt').val();
                     var count = parseInt($("#cmnt_count").html());
@@ -97,6 +115,16 @@
                     console.log("Press enter:" + value);
                     $('#cmnt').val("");
                 }
+            });
+            $(".js-cmnt-count").click(function (e) {
+
+                var id = $(e.target).attr("data-post-cmnt-id");
+                $.get("/post/show/comments", { postId: id })
+                    .done(response => {
+                        $("#cmnt-modal-content").html(response);
+                        $("#cmnt-modal").modal("show");
+                    })
+                    .fail(() => console.log("Fail"));
             });
 
             $(".js-like-count").click(function (e) {

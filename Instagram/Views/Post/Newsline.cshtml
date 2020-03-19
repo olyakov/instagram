@@ -35,8 +35,10 @@
                     <a href="#" class="icons-href">
                         <i class="fa fa-comment-o fa-2x"></i>
                     </a>
-                    <span id="@("cmnt-count"+post.Id)" class="lg-like-txt-post" style="font-weight:bold">@post.Comments.Count comments</span>
-                </div>
+                    <a class="icons-href">
+                        <span id="@("cmnt-count"+post.Id)" data-post-cmnt-id="@post.Id" class="lg-like-txt-post js-cmnt-count" style="font-weight:bold">@post.Comments.Count comments</span>
+                    </a>
+                    </div>
 
                 <div class='caption'>
                     <a href='#'>@post.User.UserName</a><span>@post.Title</span>
@@ -54,14 +56,14 @@
             </div> <!-- end Footer -->
         </div> <!-- end Insta -->
 
-        <div class="modal fade" id="@("modal"+post.Id)" role="dialog">
+        <div class="modal fade" id="@("like-modal"+post.Id)" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title" id="modal-title">Likes</h4>
                     </div>
-                    <div class="modal-body" id="@("modal-content"+post.Id)" style="overflow-y: scroll; max-height:85%;">
+                    <div class="modal-body" id="@("like-modal-content"+post.Id)" style="overflow-y: scroll; max-height:85%;">
 
                     </div>
                     <div class="modal-footer">
@@ -71,6 +73,22 @@
             </div>
         </div>
 
+        <div class="modal fade" id="@("cmnt-modal"+post.Id)" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Comments</h4>
+                    </div>
+                    <div class="modal-body" id="@("cmnt-modal-content"+post.Id)">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     }
 </section>
 
@@ -104,13 +122,26 @@
                 }
             });
 
+            $(".js-cmnt-count").click(function (e) {
+
+                var id = $(e.target).attr("data-post-cmnt-id");
+                $.get("/post/show/comments", { postId: id })
+                    .done(response => {
+                        var modal_id = ("#" + "cmnt-modal" + id)
+                        var modal_content = ("#" + "cmnt-modal-content" + id)
+                        $(modal_content).html(response);
+                        $(modal_id).modal("show");
+                    })
+                    .fail(() => console.log("Kak tak"));
+            });
+
             $(".js-like-count").click(function (e) {
 
                 var id = $(e.target).attr("data-post-like-id");
                 $.get("/Post/GetLikers", { postId: id })
                     .done(response => {
-                        var modal_id = ("#" + "modal" + id)
-                        var modal_content = ("#" + "modal-content" + id)
+                        var modal_id = ("#" + "like-modal" + id)
+                        var modal_content = ("#" + "like-modal-content" + id)
                         $(modal_content).html(response);
                         $(modal_id).modal("show");
                     })
