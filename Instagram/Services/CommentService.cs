@@ -1,5 +1,6 @@
 ﻿using Instagram.Data;
 using Instagram.Data.Model;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,5 +22,9 @@ namespace Instagram.Services
             _ctx.Comments.Add(comment);
             _ctx.SaveChanges();
         }
+
+        public IEnumerable<Comment> GetPostComments(int postId) => _ctx.Comments
+            .Include(c => c.User)
+            .Where(predicate: c => c.PostId == postId);
     }
 }

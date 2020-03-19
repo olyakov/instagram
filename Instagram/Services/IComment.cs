@@ -9,5 +9,6 @@ namespace Instagram.Services
     public interface IComment
     {
         void AddComment(Comment comment);
+        IEnumerable<Comment> GetPostComments(int postId);
     }
 }

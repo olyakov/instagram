@@ -8,7 +8,7 @@ namespace Instagram.Models
 {
     public class PostUserViewModel
     {
-        public string UserId { get; internal set; }
+        public string UserId { get; set; }
         public IEnumerable<AspNetUsers> Users { get; set; }
         public ICollection<Follow> Followings { get; set; }
         public ICollection<Follow> Followers { get; set; }

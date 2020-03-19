@@ -14,13 +14,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Instagram.Data.Model;
 using Microsoft.AspNetCore.Authorization;
+using Instagram.Dtos;
+using System;
 
 namespace Instagram.Controllers
 {
-    public class PostDto
-    {
-        public int PostId { get; set; }
-    }
+
     [Authorize]
     public class PostController : Controller
     {
@@ -28,17 +27,20 @@ namespace Instagram.Controllers
         private readonly IRaiting _raitingService;
         private readonly IUser _userService;
         private readonly IFollow _followService;
+        private readonly IComment _commentService;
+
         private readonly IHostingEnvironment _he;
 
 
-        public PostController(IPost postService, IRaiting raitingService,
-            IHostingEnvironment he, IUser userService, IFollow followService)
+        public PostController(IPost postService, IRaiting raitingService,IHostingEnvironment he,
+            IUser userService, IFollow followService, IComment commentService)
         {
             _he = he;
             _postService = postService;
             _raitingService = raitingService;
             _userService = userService;
             _followService = followService;
+            _commentService = commentService;
         }
 
         public IActionResult Upload()
@@ -50,15 +52,10 @@ namespace Instagram.Controllers
         public IActionResult Newsline()
         {
             var postList = _postService.GetAll().OrderByDescending(p => p.Created).ToList();
-            List<GalleryDetailModel> posts = new List<GalleryDetailModel>();
-            foreach (var post in postList)
-            {
-                posts.Add(_postService.GetGalleryDetailModel(post));
-            }
 
             var model = new GalleryIndexModel()
             {
-                Posts = posts,
+                Posts = postList.Select(p => _postService.GetGalleryDetailModel(p)),
                 User = _userService.GetCurrentUser(HttpContext.User)
             };
 
@@ -113,6 +110,40 @@ namespace Instagram.Controllers
         {
             await _postService.Remove(id);
             return RedirectToAction("Index", "Gallery");
+        }
+
+        [HttpPost]
+        [Route("/api/post/comment")]
+        public ActionResult AddComment(CommentDto dto)
+        {
+            var comment = new Comment
+            {
+                PostId = dto.PostId,
+                UserId = dto.CommenterId,
+                Content = dto.Message,
+                Created = DateTime.Now
+            };
+            _commentService.AddComment(comment);
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("/post/show/comments")]
+        public ActionResult GetCommentors(PostDto dto)
+        {
+            var post = _postService.GetById(dto.PostId);
+            var user = _userService.GetUserByUsername(post.User.UserName);
+
+            var commentors = _commentService.GetPostComments(dto.PostId).OrderByDescending(c => c.Created).ToList();
+
+            var viewModel = new PostCommentorsViewModel()
+            {
+                UserId = user.Id,
+                Comments = commentors
+            };
+
+            return PartialView("_CommentorsList", viewModel);
+
         }
 
     }
