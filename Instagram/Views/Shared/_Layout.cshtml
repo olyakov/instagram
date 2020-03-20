@@ -1,5 +1,6 @@
 ﻿@using Instagram.Data.Model
 @using Microsoft.AspNetCore.Identity
+@addTagHelper "Instagram.TagHelpers.ContactsTagHelper, Instagram"
 
 @inject UserManager<AspNetUsers> UserManager
 <!DOCTYPE html>
@@ -14,7 +15,7 @@
         <link rel="stylesheet" href="~/css/site.css" />
         <link rel="stylesheet" href="~/css/insta.css" />
         <link rel="stylesheet" href="~/css/profile.css" />
-        
+
         <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
     </environment>
     <environment exclude="Development">
@@ -72,7 +73,9 @@
         <hr />
         <footer>
             <p>&copy; 2018 - Instagram</p>
+            <contacts></contacts>
         </footer>
+        
     </div>
 
     <environment include="Development">

@@ -1,4 +1,5 @@
-﻿@model Instagram.Models.GalleryIndexModel
+﻿@await Component.InvokeAsync("PostsList")
+@model Instagram.Models.GalleryIndexModel
 
 
 <section>
@@ -38,7 +39,7 @@
                     <a class="icons-href">
                         <span id="@("cmnt-count"+post.Id)" data-post-cmnt-id="@post.Id" class="lg-like-txt-post js-cmnt-count" style="font-weight:bold">@post.Comments.Count comments</span>
                     </a>
-                    </div>
+                </div>
 
                 <div class='caption'>
                     <a href='#'>@post.User.UserName</a><span>@post.Title</span>

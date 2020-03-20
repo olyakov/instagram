@@ -101,6 +101,7 @@ namespace Instagram.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Route("/post/add")]
         public async Task<IActionResult> UploadNewPost(IFormFile pic, string tags, string description, string title)
         {
@@ -114,7 +115,7 @@ namespace Instagram.Controllers
         }
         
         [HttpDelete]
-        [Route("/remove/{id}")]
+        [Route("/remove/{id:int}")]
         public async Task<IActionResult> RemovePost(int id)
         {
             await _postService.Remove(id);
