@@ -12,5 +12,7 @@ namespace Instagram.Data.Model
         }
         public virtual ICollection<Follow> Followings { get; set; }
         public virtual ICollection<Follow> Followers { get; set; }
+
+        public string Url { get; set; }
     }
 }

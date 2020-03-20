@@ -55,6 +55,9 @@ namespace Instagram.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [Display(Name = "Url")]
+            public string Url { get; set; }
         }
 
         public void OnGet(string returnUrl = null)
@@ -67,7 +70,12 @@ namespace Instagram.Areas.Identity.Pages.Account
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new AspNetUsers { UserName = Input.Email, Email = Input.Email };
+                var url = Input.Url;
+                if (url == "" || url == null)
+                {
+                    url = "http://www.learnex.in/wp-content/uploads/2015/12/flat-faces-icons-circle-6.png";
+                }
+                var user = new AspNetUsers { UserName = Input.Email, Email = Input.Email, Url = url};
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
