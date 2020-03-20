@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Instagram.Data.Model;
 
-namespace Instagram.Services
+namespace Instagram.Services.Interfaces
 {
     public interface IRaiting
     {

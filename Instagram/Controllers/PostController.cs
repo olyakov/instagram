@@ -1,21 +1,15 @@
-﻿using Instagram.Models;
+﻿using Instagram.Data.Model;
+using Instagram.Dtos;
+using Instagram.Models;
+using Instagram.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Net.Http.Headers;
-using System.Threading.Tasks;
-using Instagram.Data;
-using Microsoft.AspNetCore.Hosting;
-using System.IO;
-using System.Net;
-using Instagram.Services;
-using System.Security.Claims;
-using System.Collections.Generic;
-using System.Linq;
-using Instagram.Data.Model;
-using Microsoft.AspNetCore.Authorization;
-using Instagram.Dtos;
 using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Instagram.Controllers
 {

@@ -1,15 +1,13 @@
 ﻿using Instagram.Data;
 using Instagram.Data.Model;
+using Instagram.Models;
+using Instagram.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
-using Instagram.Models;
 
 namespace Instagram.Services
 {

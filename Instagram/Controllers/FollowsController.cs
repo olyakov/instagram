@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Instagram.Data.Model;
+﻿using Instagram.Data.Model;
 using Instagram.Models;
-using Instagram.Services;
+using Instagram.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace Instagram.Controllers
 {
-    
+
     public class FollowDto
     {
         public string FollowingId { get; set; }

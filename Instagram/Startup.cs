@@ -1,7 +1,7 @@
 ﻿using Instagram.Data;
 using Instagram.Data.Model;
 using Instagram.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Instagram.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,10 +9,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;   
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using System;
+using System.Threading.Tasks;
 
 namespace Instagram
 {
@@ -64,7 +64,7 @@ namespace Instagram
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -89,6 +89,56 @@ namespace Instagram
                     name: "default",
                     template: "{controller=Gallery}/{action=Index}/{id?}");
             });
+
+            CreateRoles(serviceProvider).Wait();
+        }
+
+        private async Task CreateRoles(IServiceProvider serviceProvider)
+        {
+            //initializing custom roles   
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var UserManager = serviceProvider.GetRequiredService<UserManager<AspNetUsers>>();
+            string[] roleNames = { "Admin", "User", "Manager" };
+            IdentityResult roleResult;
+
+            foreach (var roleName in roleNames)
+            {
+                var roleExist = await RoleManager.RoleExistsAsync(roleName);
+                if (!roleExist)
+                {
+                    //create the roles and seed them to the database: Question 1  
+                    roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
+
+            AspNetUsers admin = await UserManager.FindByEmailAsync("admin@gmail.com");
+
+            if (admin == null)
+            {
+                admin = new AspNetUsers()
+                {
+                    UserName = "admin@gmail.com",
+                    Email = "admin@gmail.com",
+                    Url = "/images/admin.png"
+                };
+                await UserManager.CreateAsync(admin, "123Qwe!");
+            }
+            await UserManager.AddToRoleAsync(admin, "Admin");
+
+
+            AspNetUsers manager1 = await UserManager.FindByEmailAsync("manager1@gmail.com");
+
+            if (manager1 == null)
+            {
+                manager1 = new AspNetUsers()
+                {
+                    UserName = "manager1@gmail.com",
+                    Email = "manager1@gmail.com",
+                    Url = "/images/admin.png"
+                };
+                await UserManager.CreateAsync(manager1, "123Qwe!");
+            }
+            await UserManager.AddToRoleAsync(manager1, "Manager");
         }
     }
 }

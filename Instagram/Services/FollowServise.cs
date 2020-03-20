@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Instagram.Data;
+using Instagram.Data.Model;
+using Instagram.Services.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Instagram.Data;
-using Instagram.Data.Model;
 
 namespace Instagram.Services
 {

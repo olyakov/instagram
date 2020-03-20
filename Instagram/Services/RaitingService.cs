@@ -1,7 +1,6 @@
 ﻿using Instagram.Data;
 using Instagram.Data.Model;
-using System;
-using System.Collections.Generic;
+using Instagram.Services.Interfaces;
 using System.Linq;
 using System.Threading.Tasks;
 

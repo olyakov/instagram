@@ -1,5 +1,3 @@
-using System;
-
 namespace Instagram.Models
 {
     public class ErrorViewModel

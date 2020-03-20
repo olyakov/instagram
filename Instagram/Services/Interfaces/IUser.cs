@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Instagram.Data.Model;
 
-namespace Instagram.Services
+namespace Instagram.Services.Interfaces
 {
     public interface IUser
     {

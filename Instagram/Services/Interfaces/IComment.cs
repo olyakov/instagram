@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Instagram.Services
+namespace Instagram.Services.Interfaces
 {
     public interface IComment
     {

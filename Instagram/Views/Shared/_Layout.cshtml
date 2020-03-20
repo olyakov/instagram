@@ -35,36 +35,41 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Gallery" asp-action="Index" class="navbar-brand"><i class="fa fa-instagram fa-lg" style="border-radius: 5px"></i><span></span> Instagram</a>
+
+                <a asp-area="" asp-controller="Post" asp-action="Newsline" class="navbar-brand"><i class="fa fa-instagram fa-lg" style="border-radius: 5px"></i><span></span></a>
+                <a asp-area="" asp-controller="Gallery" asp-action="Index" class="navbar-brand"> Instagram</a>
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Post" asp-action="Newsline">Newsline</a></li>
-                </ul>
                 <partial name="_LoginPartial" />
             </div>
         </div>
     </nav>
-    <div class='lil-bar'>
-        <div class='bar-cont'>
-            <a asp-area="" asp-controller="Post" asp-action="Upload"><i class="fa fa-plus"></i></a>
-            <a href="#" onclick='return false;' class='list-order' role="button"><i class="fa fa-ellipsis-h"></i></a>
+    @if (UserManager.GetUserName(User) != null)
+    {
+        <div class='lil-bar'>
+            <div class='bar-cont'>
+                <a asp-area="" asp-controller="Post" asp-action="Upload"><i class="fa fa-plus"></i></a>
+                <a href="#" onclick='return false;' class='list-order' role="button"><i class="fa fa-ellipsis-h"></i></a>
+            </div>
         </div>
-    </div>
-    <div class="list">
-        <ul>
-            <li>
-                <a asp-route-username="@UserManager.GetUserName(User)" asp-controller="Gallery" asp-action="Index">
-                    <img src='https://images.pexels.com/photos/5256/city-cars-road-houses.jpg?auto=compress&cs=tinysrgb&h=750&w=1260'>
-                    @UserManager.GetUserName(User)
-                </a>
-            </li>
-            <li><a href='#'>Log in</a></li>
-            <li><a href='#'>Sign up</a></li>
-            <li><a href='#'>Report this user</a></li>
-            <li class='collapse'><a href='#'>Collapse the bar</a></li>
-        </ul>
-    </div>
+
+        <div class="list">
+            <ul>
+                <li>
+                    <a asp-route-username="@UserManager.GetUserName(User)" asp-controller="Gallery" asp-action="Index">
+                        <img src='@UserManager.GetUserAsync(User).Result.Url'>
+                        @UserManager.GetUserName(User)
+                    </a>
+                </li>
+                <li><a asp-area="" asp-controller="Post" asp-action="Newsline">News</a></li>
+                <li><a href='#'>Report this user</a></li>
+                <li><a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Edit profile</a></li>
+                <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                <li class='collapse'><a href='#'>Collapse the bar</a></li>
+            </ul>
+        </div>
+    }
+
 
     <partial name="_CookieConsentPartial" />
 
@@ -75,7 +80,7 @@
             <p>&copy; 2018 - Instagram</p>
             <contacts></contacts>
         </footer>
-        
+
     </div>
 
     <environment include="Development">

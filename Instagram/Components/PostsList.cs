@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Instagram.Models;
-using Instagram.Services;
+﻿using Instagram.Models;
+using Instagram.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 
 namespace Instagram.Components
 {

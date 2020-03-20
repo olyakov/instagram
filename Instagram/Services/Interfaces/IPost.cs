@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Instagram.Data.Model;
 using Instagram.Models;
 
-namespace Instagram.Services
+namespace Instagram.Services.Interfaces
 {
     public interface IPost
     {

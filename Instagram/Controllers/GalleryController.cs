@@ -1,16 +1,10 @@
-﻿using System.Collections.Generic;
-using Instagram.Data;
-using Instagram.Data.Model;
-using Instagram.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.Linq;
+﻿using Instagram.Models;
+using Instagram.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
-using System.Security.Policy;
-using Instagram.Services;
 
 namespace Instagram.Controllers
 {
