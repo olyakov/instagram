@@ -1,4 +1,4 @@
-﻿using Instagram.Models;
+﻿    using Instagram.Models;
 using Instagram.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,14 +31,14 @@ namespace Instagram.Controllers
             {
                 username = current_user.UserName;
             }
-            var postList = _postService.GetAllByUsername(username);
-            List<GalleryDetailModel> posts = new List<GalleryDetailModel>();
-            foreach (var post in postList)
-            {
-                posts.Add(_postService.GetGalleryDetailModel(post));
-            }
-
             var user = _userService.GetUserByUsername(username);
+            if (user == null)
+            {
+                return BadRequest();
+            }
+            var posts = _postService.GetAllByUsername(username).Select(p => _postService.GetGalleryDetailModel(p));
+
+            
             var followers = _followService.GetUserFollows(user.Id);
             var followings = _followService.GetUserFollowings(user.Id);
 

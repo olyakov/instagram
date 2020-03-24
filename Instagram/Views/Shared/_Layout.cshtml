@@ -40,7 +40,14 @@
                 <a asp-area="" asp-controller="Gallery" asp-action="Index" class="navbar-brand"> Instagram</a>
             </div>
             <div class="navbar-collapse collapse">
-                <partial name="_LoginPartial" />
+                @if (this.User.IsInRole("Admin"))
+                {
+                    <ul class="nav navbar-nav">
+                        <li><a asp-area="" asp-controller="Admin" asp-action="Reports" class="navbar-brand">Reports</a></li>
+                    </ul>
+                }
+                    <partial name="_LoginPartial"/>
+                
             </div>
         </div>
     </nav>

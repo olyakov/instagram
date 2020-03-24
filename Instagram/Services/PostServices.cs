@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Instagram.Services
 {
@@ -44,9 +45,14 @@ namespace Instagram.Services
 
         public IEnumerable<Post> GetAllByUsername(string username)
         {
-            var userId = _userService.GetUserByUsername(username).Id;
+            var user = _userService.GetUserByUsername(username);
 
-            return GetAll().Where(p => p.UserId == userId);
+            if (user == null)
+            {
+                return null;
+            }
+
+            return GetAll().Where(p => p.User.UserName == user.UserName);
         }
 
         public Post GetById(int id) => GetAll().FirstOrDefault(p => p.Id == id);

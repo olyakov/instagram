@@ -26,8 +26,12 @@ namespace Instagram.Controllers
         private readonly IHostingEnvironment _he;
 
 
-        public PostController(IPost postService, IRaiting raitingService,IHostingEnvironment he,
-            IUser userService, IFollow followService, IComment commentService)
+        public PostController(IPost postService,
+            IRaiting raitingService,
+            IHostingEnvironment he,
+            IUser userService,
+            IFollow followService,
+            IComment commentService)
         {
             _he = he;
             _postService = postService;
