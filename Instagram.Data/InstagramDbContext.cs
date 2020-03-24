@@ -16,6 +16,7 @@ namespace Instagram.Data
         public virtual DbSet<Like> Likes { get; set; }
         public virtual DbSet<Dislike> Dislikes { get; set; }
         public virtual DbSet<Follow> Follows { get; set; }
+        public virtual DbSet<Report> Reports { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

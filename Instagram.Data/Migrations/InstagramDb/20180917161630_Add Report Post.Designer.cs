@@ -4,14 +4,16 @@ using Instagram.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Instagram.Data.Migrations.InstagramDb
 {
     [DbContext(typeof(InstagramDbContext))]
-    partial class InstagramDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180917161630_Add Report Post")]
+    partial class AddReportPost
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -172,14 +174,17 @@ namespace Instagram.Data.Migrations.InstagramDb
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ReportPostId");
+                    b.Property<string>("ReportPostId")
+                        .IsRequired();
+
+                    b.Property<int?>("ReportPostId1");
 
                     b.Property<string>("ReportUserId")
                         .IsRequired();
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReportPostId");
+                    b.HasIndex("ReportPostId1");
 
                     b.HasIndex("ReportUserId");
 
@@ -267,7 +272,7 @@ namespace Instagram.Data.Migrations.InstagramDb
                 {
                     b.HasOne("Instagram.Data.Model.Post", "ReportPost")
                         .WithMany()
-                        .HasForeignKey("ReportPostId");
+                        .HasForeignKey("ReportPostId1");
 
                     b.HasOne("Instagram.Data.Model.AspNetUsers", "ReportUser")
                         .WithMany()
