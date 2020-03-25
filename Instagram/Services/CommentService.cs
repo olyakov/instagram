@@ -24,6 +24,6 @@ namespace Instagram.Services
 
         public IEnumerable<Comment> GetPostComments(int postId) => _ctx.Comments
             .Include(c => c.User)
-            .Where(predicate: c => c.PostId == postId);
+            .Where(c => c.PostId == postId);
     }
 }
