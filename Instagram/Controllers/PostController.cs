@@ -22,6 +22,7 @@ namespace Instagram.Controllers
         private readonly IUser _userService;
         private readonly IFollow _followService;
         private readonly IComment _commentService;
+        private readonly IReport _reportService;
 
         private readonly IHostingEnvironment _he;
 
@@ -31,7 +32,8 @@ namespace Instagram.Controllers
             IHostingEnvironment he,
             IUser userService,
             IFollow followService,
-            IComment commentService)
+            IComment commentService,
+            IReport reportService)
         {
             _he = he;
             _postService = postService;
@@ -39,13 +41,14 @@ namespace Instagram.Controllers
             _userService = userService;
             _followService = followService;
             _commentService = commentService;
+            _reportService = reportService;
         }
 
         public IActionResult Upload()
         {
             var model = new UploadPostModel();
             return View(model);
-        }   
+        }
 
         public IActionResult Newsline()
         {
@@ -68,7 +71,7 @@ namespace Instagram.Controllers
 
             return View(model);
         }
- 
+
         [HttpPost]
         public async Task<IActionResult> SetLike(PostDto dto)
         {
@@ -88,7 +91,7 @@ namespace Instagram.Controllers
             var likers = post.Likes
                 .Select(r => _userService.GetUserById(r.UserId))
                 .ToList();
- 
+
             var viewModel = new PostUserViewModel()
             {
                 UserId = user.Id,
@@ -111,7 +114,7 @@ namespace Instagram.Controllers
             }
             return RedirectToAction("Index", "Gallery");
         }
-        
+
         [HttpDelete]
         [Route("/remove/{id:int}")]
         public async Task<IActionResult> RemovePost(int id)
@@ -153,7 +156,24 @@ namespace Instagram.Controllers
             };
 
             return PartialView("_CommentorsList", viewModel);
+        }
 
+        [HttpPost]
+        [Route("/post/report")]
+        public ActionResult ReportPost(PostDto dto)
+        {
+            var post = _postService.GetById(dto.PostId);
+            var user = _userService.GetCurrentUser(HttpContext.User);
+
+            var report = new Report
+            {
+                ReportUserId = user.Id,
+                ReportPost = post
+            };
+
+            _reportService.AddReport(report);
+
+            return Ok();
         }
 
     }
