@@ -122,6 +122,19 @@ for details on configuring this project to bundle and minify static web assets. 
     overflow-y: auto !important;
 }
 
+.drop-menu-report {
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-item-align: center;
+    align-self: center;
+    right: 16px;
+    text-align: right;
+}
+
 .modal.fade .modal-dialog.modal-dialog-zoom {-webkit-transform: translate(0,0)scale(.5);transform: translate(0,0)scale(.5);}
 .modal.show .modal-dialog.modal-dialog-zoom {-webkit-transform: translate(0,0)scale(1);transform: translate(0,0)scale(1);}
 

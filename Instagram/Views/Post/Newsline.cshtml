@@ -6,10 +6,18 @@
     {
         <div class='insta fade-scroll'>
             <div class='top-insta'>
-                <a asp-route-username="@post.User.UserName" asp-controller="Gallery" asp-action="Index"><img src='https://images.pexels.com/photos/5256/city-cars-road-houses.jpg?auto=compress&cs=tinysrgb&h=750&w=1260'></a>
+                <a asp-route-username="@post.User.UserName" asp-controller="Gallery" asp-action="Index"><img src=@post.User.Url></a>
                 <a asp-route-username="@post.User.UserName" asp-controller="Gallery" asp-action="Index" class='user'>@post.User.UserName</a>
+              
+                    <div class="dropdown drop-menu-report">
+                        <a class="icons-href" data-toggle="dropdown">
+                            <span class="fa fa-ellipsis-v"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="icons-href js-report" data-post-id="@post.Id">Report this post</a></li>
+                        </ul>
+                    </div>
 
-                <span class='dot'></span>
 
             </div>
             <div class='post'>
@@ -50,7 +58,8 @@
                 <span>@post.Created.ToLongDateString()</span>
                 <div class='comment-section'>
                     <input type='text' id="cmnt" data-post-cmnt-id="@post.Id" class="js-cmnt" placeholder='Add a comment...'>
-                    <span class='dot02'></span>
+                    <span class='dot02'>
+                    </span>
                 </div>
 
             </div> <!-- end Footer -->
@@ -98,6 +107,16 @@
     {
     <script>
         $(document).ready(function () {
+
+            $(".js-report").click(function (e) {
+
+                var id = $(e.target).attr("data-post-id");
+
+                $.post("/post/report", { postId: id })
+                    .done(function () {
+                        console.log("done");
+                    });
+            });
 
             $('.js-cmnt').keydown(function (e) {
                 if (e.keyCode == 13) {

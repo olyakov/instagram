@@ -1,7 +1,9 @@
-﻿
-@{
-    ViewData["Title"] = "Reports";
-}
+﻿@model Instagram.Models.AdminReportsViewModel
 
-<h2>Reports</h2>
+<div style="margin-top: 20px ">
+    @foreach (var user in Model.Users)
+    {
+        @await Component.InvokeAsync("ReportList", new { username = user.UserName })
+    }
+</div>
 
