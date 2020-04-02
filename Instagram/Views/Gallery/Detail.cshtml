@@ -1,8 +1,9 @@
 ﻿@using Instagram.Controllers
+@using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.CodeAnalysis.CSharp.Syntax
 
 @model Instagram.Models.GalleryDetailModel
-
+@inject IHtmlLocalizer<SharedResource> Localizer
 
 
 <div class="container body-content">
@@ -31,26 +32,29 @@
                     </a>
 
                     <a class="icons-href">
-                        <span id="likes" data-post-like-id="@Model.Id" class="lg-like-txt-post js-like-count" style="font-weight:bold">@Model.Likes.Count likes</span>
+                        <span id="likes" data-post-like-id="@Model.Id" class="lg-like-txt-post js-like-count" style="font-weight:bold">@Model.Likes.Count</span>
+                        <span data-post-like-id="@Model.Id" class="lg-like-txt-post js-like-count" style="font-weight:bold"> @Localizer["likes"]</span>
                     </a>
                     &emsp;
                     <a class="icons-href">
                         <i class="fa fa-comment-o fa-2x"></i>
                     </a>
                     <a class="icons-href">
-                        <span id="cmnt_count" data-post-cmnt-id="@Model.Id" class="lg-like-txt-post js-cmnt-count" style="font-weight:bold">@Model.Comments.Count comments</span>
-                    </a>
+                        <span id="cmnt_count" data-post-cmnt-id="@Model.Id" class="lg-like-txt-post js-cmnt-count" style="font-weight:bold">@Model.Comments.Count</span>
+                        <span data-post-cmnt-id="@Model.Id" class="lg-like-txt-post js-cmnt-count" style="font-weight:bold"> @Localizer["comments"]</span>
+                        </a>
+     
                     <hr>
                     <span>@Model.Created.ToLongDateString()</span>
                 </div>
                 <hr />
                 <div class='comment-section'>
-                    <input type='text' id='cmnt' placeholder='Add a comment...'>
+                    <input type='text' id='cmnt' placeholder='@Localizer["Add comment"]...'>
                     <span class='dot02'></span>
                 </div>
                 <div class="row controls" style="padding: 10px">
                     <a class="btn btn-primary" asp-controller="Gallery" asp-action="Index">
-                        Back to all
+                        @Localizer["Back to all"]
                     </a>
                 </div>
 
@@ -66,13 +70,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Likes</h4>
+                <h4 class="modal-title">@Localizer["Modal Likes"]</h4>
             </div>
             <div class="modal-body" id="like-modal-content">
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">@Localizer["Close"]</button>
             </div>
         </div>
     </div>
@@ -83,13 +87,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Comments</h4>
+                <h4 class="modal-title">@Localizer["Modal Comments"]</h4>
             </div>
             <div class="modal-body" id="cmnt-modal-content" style="max-height: 80%">
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">@Localizer["Close"]</button>
             </div>
         </div>
     </div>
@@ -111,7 +115,7 @@
                             commenterId: "@Model.User.Id",
                             postId: "@Model.Id"
                         });
-                    $("#cmnt_count").html(count + 1 + " comments");
+                    $("#cmnt_count").html(count + 1);
                     console.log("Press enter:" + value);
                     $('#cmnt').val("");
                 }
@@ -149,13 +153,13 @@
 
                         if ($(icon)[0].hasAttribute("liked")) {
 
-                            $("#likes").html(count - 1 + " likes");
+                            $("#likes").html(count - 1);
                             $(icon).removeAttr("liked");
                             $(icon).removeClass("fa-heart").addClass("fa-heart-o");
                             $(icon).removeClass("red-heart");
                         } else {
 
-                            $("#likes").html(count + 1 + " likes");
+                            $("#likes").html(count + 1);
                             $(icon).attr("liked", "1");
                             $(icon).removeClass("fa-heart-o").addClass("fa-heart");
                             $(icon).addClass("red-heart");

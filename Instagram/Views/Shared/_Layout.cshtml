@@ -1,8 +1,10 @@
 ﻿@using Instagram.Data.Model
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.Localization
 @addTagHelper "Instagram.TagHelpers.ContactsTagHelper, Instagram"
 
 @inject UserManager<AspNetUsers> UserManager
+@inject IHtmlLocalizer<SharedResource> Localizer
 <!DOCTYPE html>
 <html>
 <head>
@@ -46,8 +48,8 @@
                         <li><a asp-area="" asp-controller="Admin" asp-action="Reports" class="navbar-brand">Reports</a></li>
                     </ul>
                 }
-                    <partial name="_LoginPartial"/>
-                
+                <partial name="_LoginPartial" />
+
             </div>
         </div>
     </nav>
@@ -55,8 +57,8 @@
     {
         <div class='lil-bar'>
             <div class='bar-cont'>
-                <a asp-area="" asp-controller="Post" asp-action="Upload"><i class="fa fa-plus"></i></a>
-                <a href="#" onclick='return false;' class='list-order' role="button"><i class="fa fa-ellipsis-h"></i></a>
+                <a asp-area="" asp-controller="Post" asp-action="Upload" title="@Localizer["Add new post"]"><i class="fa fa-plus"></i></a>
+                <a href="#" onclick='return false;' class='list-order' role="button" title="@Localizer["Info account"]"><i class="fa fa-ellipsis-h"></i></a>
             </div>
         </div>
 
@@ -68,10 +70,9 @@
                         @UserManager.GetUserName(User)
                     </a>
                 </li>
-                <li><a asp-area="" asp-controller="Post" asp-action="Newsline">News</a></li>
-                <li><a href='#'>Report this user</a></li>
-                <li><a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Edit profile</a></li>
-                <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+                <li><a asp-area="" asp-controller="Post" asp-action="Newsline">@Localizer["News"]</a></li>
+                <li><a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@Localizer["Edit profile"]</a></li>
+                <li><a href="javascript:document.getElementById('logoutForm').submit()">@Localizer["Log off"]</a></li>
                 <li class='collapse'><a href='#'>Collapse the bar</a></li>
             </ul>
         </div>
@@ -83,11 +84,18 @@
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer>
-            <p>&copy; 2018 - Instagram</p>
-            <contacts></contacts>
-        </footer>
-
+        <div class="col-md-3">
+            <footer>
+                <p>&copy; 2018 - Instagram</p>
+                <contacts></contacts>
+            </footer>
+        </div>
+        <div class="col-md-4">
+            <div class="text-right" style="width: 60%">
+                @await Html.PartialAsync("_SelectLanguagePartial")
+            </div>
+        </div>
+        
     </div>
 
     <environment include="Development">

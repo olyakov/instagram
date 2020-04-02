@@ -138,4 +138,34 @@
   <data name="posts" xml:space="preserve">
     <value>posts</value>
   </data>
+  <data name="Add comment" xml:space="preserve">
+    <value>Add comment</value>
+  </data>
+  <data name="Add new post" xml:space="preserve">
+    <value>Add new post</value>
+  </data>
+  <data name="Back to all" xml:space="preserve">
+    <value>Back to all</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="comments" xml:space="preserve">
+    <value>comments</value>
+  </data>
+  <data name="Info account" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="likes" xml:space="preserve">
+    <value>likes</value>
+  </data>
+  <data name="Modal Comments" xml:space="preserve">
+    <value>Comments</value>
+  </data>
+  <data name="Modal Likes" xml:space="preserve">
+    <value>Likes</value>
+  </data>
+  <data name="Report this post" xml:space="preserve">
+    <value>Report this post</value>
+  </data>
 </root>
