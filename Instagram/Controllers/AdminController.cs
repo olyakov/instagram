@@ -48,7 +48,7 @@ namespace Instagram.Controllers
 
 
 
-        [HttpDelete]
+        [HttpPost]
         public async Task<ActionResult> DeleteUser(string username)
         {
             if (username == User.Identity.Name)

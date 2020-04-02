@@ -1,10 +1,12 @@
 ﻿@using Instagram.Data.Model
 @using Microsoft.AspNetCore.Identity
 @using Instagram.Controllers
+@using Microsoft.AspNetCore.Mvc.Localization
 @model Instagram.Models.GalleryIndexModel
 
 
 @inject UserManager<AspNetUsers> UserManager
+@inject IHtmlLocalizer<SharedResource> Localizer
 
 <div class="conteiner body-content">
     <div class="rela-block profile-card">
@@ -19,23 +21,26 @@
 
         </div>
         <div class="rela-block profile-card-stats">
-            <div class="floated profile-stat works" id="num_works">
+            <div class="floated profile-stat" id="num_works">
                 <a data-toggle="modal" data-target="#exampleModal" class="icons-href">
                     @Model.Posts.Count()
                 </a>
                 <br>
+                <span style="color: grey">@Localizer["posts"]</span>
             </div>
-            <div class="floated profile-stat followers" id="num_followers">
+            <div class="floated profile-stat" id="num_followers">
                 <a id="count_followers" class="icons-href">
                     @Model.Followers.Count
                 </a>
                 <br>
+                <span style="color: grey">@Localizer["followers"]</span>
             </div>
-            <div class="floated profile-stat following" id="num_following">
+            <div class="floated profile-stat" id="num_following">
                 <a id="count_followings" class="icons-href">
                     @Model.Followings.Count
                 </a>
                 <br>
+                <span style="color: grey">@Localizer["following"]</span>
             </div>
         </div>
     </div>

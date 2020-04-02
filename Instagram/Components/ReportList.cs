@@ -1,4 +1,5 @@
-﻿using Instagram.Models;
+﻿using Instagram.Data.Model;
+using Instagram.Models;
 using Instagram.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -27,9 +28,11 @@ namespace Instagram.Components
 
         public async Task<IViewComponentResult> InvokeAsync(string username)
         {
-            var reports = _reportService.GetUserReport(username);
+            var reports = await Task.Run(() => _reportService.GetUserReport(username));
             var user = _userService.GetUserByUsername(username);
 
+           //var posts = _postService.GetAllByUsername(username).OrderByDescending(u => u.Reports.Count());
+  
             var model = new AdminReportsViewModel()
             {
                 Reports = reports,

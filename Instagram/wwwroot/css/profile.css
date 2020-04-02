@@ -64,12 +64,3 @@
 .profile-stat:after { 
     color: #999; 
 } 
-.works::after { 
-    content: "posts"; 
-} 
-.followers::after { 
-    content: "followers"; 
-} 
-.following::after { 
-    content: "following"; 
-}

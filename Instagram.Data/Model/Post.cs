@@ -37,9 +37,9 @@ namespace Instagram.Data.Model
         public IEnumerable<Comment> Comments { get; set; }
         public IEnumerable<Like> Likes { get; set; }
         public IEnumerable<Dislike> Dislikes { get; set; }
+        public IEnumerable<Report> Reports { get; set; }
 
-        
 
-        
+
     }
 }

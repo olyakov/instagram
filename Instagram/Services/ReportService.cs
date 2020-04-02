@@ -24,10 +24,10 @@ namespace Instagram.Services
             _ctx.SaveChanges();
         }
 
-        public IEnumerable<Report> GetUserReport(string userId) => _ctx.Reports
+        public IEnumerable<Report> GetUserReport(string username) => _ctx.Reports
             .Include(r => r.ReportPost)
             .Include(r => r.ReportUser)
-            .Where(r => r.ReportPost.UserId == userId);
+            .Where(r => r.ReportPost.User.UserName == username);
 
     }
 }
