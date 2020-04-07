@@ -89,6 +89,12 @@ namespace Instagram.Services
             await _ctx.SaveChangesAsync();
         }
 
+        public async Task EditPost(Post post)
+        {
+            _ctx.Posts.Update(post);
+            await _ctx.SaveChangesAsync();
+        }
+
         public List<Tag> ParseTags(string tags) => tags.Split(",").Select(tag => new Tag
         {
             Title = tag
@@ -108,7 +114,7 @@ namespace Instagram.Services
                 Dislikes = post.Dislikes.ToList(),
                 Comments = post.Comments.ToList(),
                 User = post.User,
-                IsSetLike = !post.Likes.Any(l => l.UserId == _userService.GetCurrentUser(_httpCtxAcc.HttpContext.User).Id) ? false : true,
+                IsSetLike = post.Likes.Any(l => l.UserId == _userService.GetCurrentUser(_httpCtxAcc.HttpContext.User).Id),
             };
             return model;
         }

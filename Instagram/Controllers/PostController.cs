@@ -50,6 +50,29 @@ namespace Instagram.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var post = _postService.GetById(id);
+            ViewBag.Tags = string.Join(", ", post.Tags.Select(t => t.Title).ToList());
+
+            return View("Edit", post);
+        }
+
+        [HttpPost]
+        [Route("/post/edit")]
+        public async Task<IActionResult> EditPost(string tags, string description, string title, string url, int id)
+        {
+            var post = _postService.GetById(id);
+            post.Title = title;
+            post.Description = description;
+            post.Tags = _postService.ParseTags(tags);
+            post.Url = url;
+
+            await _postService.EditPost(post);
+            return RedirectToAction("Detail", "Gallery", new{ id = post.Id});
+        }
+
         public IActionResult Newsline()
         {
             var user = _userService.GetCurrentUser(HttpContext.User);
@@ -101,16 +124,42 @@ namespace Instagram.Controllers
             return PartialView("_UserList", viewModel);
         }
 
+        [HttpGet]
+        [Route("{postId:int}/likes")]
+        public ActionResult GetLikes(int postId)
+        {
+            var likes = _postService.GetById(postId)
+                .Likes
+                .ToList();
+
+            return PartialView("_Likes", likes);
+        }
+
+        [HttpGet]
+        [Route("{postId:int}/isLiked")]
+        public ActionResult IsSetLike(int postId)
+        {
+            var post = _postService.GetById(postId);
+            var isSetLike = post.Likes.Any(l => l.UserId == _userService.GetCurrentUser(HttpContext.User).Id);
+
+            return PartialView("_HeartColor", isSetLike);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("/post/add")]
-        public async Task<IActionResult> UploadNewPost(IFormFile pic, string tags, string description, string title)
+        public async Task<IActionResult> UploadNewPost(IFormFile pic, string tags, string description, string title, string url)
         {
+
             if (pic != null)
             {
                 var filename = Path.Combine(_he.WebRootPath, Path.GetFileName(pic.FileName));
                 pic.CopyTo(new FileStream(filename, FileMode.Create));
                 await _postService.AddPost(title, tags, description, "/" + Path.GetFileName(pic.FileName));
+            }
+            else if (url != null)
+            {
+                await _postService.AddPost(title, tags, description, url);
             }
             return RedirectToAction("Index", "Gallery");
         }
@@ -158,6 +207,17 @@ namespace Instagram.Controllers
             return PartialView("_CommentorsList", viewModel);
         }
 
+        [HttpGet]
+        [Route("{postId:int}/comments")]
+        public ActionResult GetComments(int postId)
+        {
+            var comments = _postService.GetById(postId)
+                .Comments
+                .ToList();
+
+            return PartialView("_Comments", comments);
+        }
+
         [HttpPost]
         [Route("/post/report")]
         public ActionResult ReportPost(PostDto dto)
@@ -174,6 +234,26 @@ namespace Instagram.Controllers
             _reportService.AddReport(report);
 
             return Ok();
+        }
+
+        [HttpGet]
+        public IActionResult Search(string search)
+        {
+            var user = _userService.GetCurrentUser(HttpContext.User);
+            var post = _postService
+                .GetAll()
+                .Where(p => (p.Title.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0) 
+                            || (string.Join(", ", p.Tags.Select(t => t.Title).ToList()).IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0))
+                .OrderByDescending(p => p.Created).ToList()
+                .Select(p => _postService.GetGalleryDetailModel(p));
+
+            var model = new GalleryIndexModel()
+            {
+                Posts = post,
+                User = user
+            };
+
+            return View("Newsline", model);
         }
 
     }

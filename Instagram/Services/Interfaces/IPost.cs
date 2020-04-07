@@ -18,5 +18,6 @@ namespace Instagram.Services.Interfaces
         Task AddPost(string title, string tags, string description, string url);
         List<Tag> ParseTags(string tags);
         GalleryDetailModel GetGalleryDetailModel(Post post);
+        Task EditPost(Post post);
     }
 }

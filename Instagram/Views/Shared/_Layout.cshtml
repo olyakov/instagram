@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="~/css/site.css" />
         <link rel="stylesheet" href="~/css/insta.css" />
         <link rel="stylesheet" href="~/css/profile.css" />
-
+        <link rel="stylesheet" href="~/css/search.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     </environment>
     <environment exclude="Development">
@@ -48,6 +48,16 @@
                         <li><a asp-area="" asp-controller="Admin" asp-action="Reports" class="navbar-brand">Reports</a></li>
                     </ul>
                 }
+                <div class="col-md-4 col-md-offset-4">
+                    <form asp-controller="Post" asp-action="Search"
+                          method="get" class="search-form" style="padding-top: 2%">
+                        <div class="form-group has-feedback">
+                            <label for="search" class="sr-only">Search</label>
+                            <input type="text" class="form-control" name="search" id="search" placeholder="Search...">
+                            <span type="submit" class="glyphicon glyphicon-search form-control-feedback"></span>
+                        </div>
+                    </form>
+                </div>
                 <partial name="_LoginPartial" />
 
             </div>
@@ -118,57 +128,58 @@
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
-    <script>
-        $(function () {
-            $(window).on('scroll resize', function holy_nob() {
-                var wh = $(window).height();
-                var wt = $(window).scrollTop();
-                var wb = (wt + wh);
-                var rbj = $('.lil-bar');
-                var ft = $('.footer-cont');
-                var ft_h = ft.height();
-                var tof = (ft_h);
-                var fol = (ft_h + 15);
-                if (wb >= tof) {
-                    rbj.css('bottom', fol);
-                } else {
-                    rbj.css('bottom', '15px');
-                }
-                $('.fade-scroll').each(function () {
-                    var element = $(this);
-                    var el_h = element.height();
-                    var el_t = element.offset().top;
-                    var el_b = (el_t + el_h);
-                    if ((el_b > wt) && (el_t < wb)) {
-                        element.addClass('animation');
-                    }
-                    else {
-                        element.removeClass('animation');
-                    }
-                    if (wt > el_t) {
-                        element.css('opacity', 1 - (wt - el_t) / 850);
-                    }
-                    if (wt > 10) {
-                        $('.navbar').addClass('navfar').find('span').addClass('mini')
-                        $('.fa-instagram').addClass('bisc');
-                    }
+<script>
 
-                    else {
-                        $('.navbar').removeClass('navfar');
-                        $('.navbar span').removeClass('mini');
-                        $('.fa-instagram').removeClass('bisc');
-                    }
-                });
-            });
-            $('.list-order, .collapse').on('click', function () {
-                $('.list').toggleClass('animate');
-                $('.list-order').toggleClass('ba');
-            });
-            $("a[href='#']").click(function (e) {
-                e.preventDefault();
+    $(function () {
+        $(window).on('scroll resize', function holy_nob() {
+            var wh = $(window).height();
+            var wt = $(window).scrollTop();
+            var wb = (wt + wh);
+            var rbj = $('.lil-bar');
+            var ft = $('.footer-cont');
+            var ft_h = ft.height();
+            var tof = (ft_h);
+            var fol = (ft_h + 15);
+            if (wb >= tof) {
+                rbj.css('bottom', fol);
+            } else {
+                rbj.css('bottom', '15px');
+            }
+            $('.fade-scroll').each(function () {
+                var element = $(this);
+                var el_h = element.height();
+                var el_t = element.offset().top;
+                var el_b = (el_t + el_h);
+                if ((el_b > wt) && (el_t < wb)) {
+                    element.addClass('animation');
+                }
+                else {
+                    element.removeClass('animation');
+                }
+                if (wt > el_t) {
+                    element.css('opacity', 1 - (wt - el_t) / 850);
+                }
+                if (wt > 10) {
+                    $('.navbar').addClass('navfar').find('span').addClass('mini')
+                    $('.fa-instagram').addClass('bisc');
+                }
+
+                else {
+                    $('.navbar').removeClass('navfar');
+                    $('.navbar span').removeClass('mini');
+                    $('.fa-instagram').removeClass('bisc');
+                }
             });
         });
-    </script>
+        $('.list-order, .collapse').on('click', function () {
+            $('.list').toggleClass('animate');
+            $('.list-order').toggleClass('ba');
+        });
+        $("a[href='#']").click(function (e) {
+            e.preventDefault();
+        });
+    });
+</script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

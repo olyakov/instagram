@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Instagram.Data;
 using Instagram.Data.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -15,17 +16,20 @@ namespace Instagram.Areas.Identity.Pages.Account.Manage
     public partial class IndexModel : PageModel
     {
         private readonly UserManager<AspNetUsers> _userManager;
+        private readonly IdentityDbContext _context;
         private readonly SignInManager<AspNetUsers> _signInManager;
         private readonly IEmailSender _emailSender;
 
         public IndexModel(
             UserManager<AspNetUsers> userManager,
             SignInManager<AspNetUsers> signInManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IdentityDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _context = context;
         }
 
         public string Username { get; set; }
@@ -47,6 +51,9 @@ namespace Instagram.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [Display(Name = "Url")]
+            public string Url { get; set; }
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -60,13 +67,15 @@ namespace Instagram.Areas.Identity.Pages.Account.Manage
             var userName = await _userManager.GetUserNameAsync(user);
             var email = await _userManager.GetEmailAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var url = user.Url;
 
             Username = userName;
 
             Input = new InputModel
             {
                 Email = email,
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                Url = url
             };
 
             IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
@@ -107,6 +116,15 @@ namespace Instagram.Areas.Identity.Pages.Account.Manage
                     var userId = await _userManager.GetUserIdAsync(user);
                     throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
                 }
+            }
+
+            var url = user.Url;
+            if (Input.Url != url)
+            {
+                var user_db = _context.ApplicationUsers.FirstOrDefault(u => u.Id == user.Id);
+                user_db.Url = Input.Url;
+                await _context.SaveChangesAsync();
+                user.Url = Input.Url;
             }
 
             await _signInManager.RefreshSignInAsync(user);

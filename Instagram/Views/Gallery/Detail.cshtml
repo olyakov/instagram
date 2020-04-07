@@ -22,28 +22,31 @@
                 <a class="icons-href" asp-route-id="@Model.Id" asp-controller="Post" asp-action="RemovePost">
                     <i class="fa fa-trash-o fa-2x"></i>
                 </a>
+                <a class="icons-href" asp-route-id="@Model.Id" asp-controller="Post" asp-action="Edit">
+                    <i class="fa fa-edit fa-2x"></i>
+                </a>
                 <hr>
                 <p>
                     @Model.Description
                 </p>
                 <div class="post-detail-meta">
-                    <a class="icons-href">
-                        <i data-post-id="@Model.Id" class="fa @(Model.IsSetLike ? "fa-heart" : "fa-heart-o") fa-2x @(Model.IsSetLike ? "red-heart" : "") js-like" @(Model.IsSetLike ? "liked" : "") aria-hidden="true"></i>
+                    <a id="colorHH" class="icons-href  js-like">
+                        @Html.Partial("_HeartColor", Model.IsSetLike)
                     </a>
 
                     <a class="icons-href">
-                        <span id="likes" data-post-like-id="@Model.Id" class="lg-like-txt-post js-like-count" style="font-weight:bold">@Model.Likes.Count</span>
-                        <span data-post-like-id="@Model.Id" class="lg-like-txt-post js-like-count" style="font-weight:bold"> @Localizer["likes"]</span>
+                        @Html.Partial("_Likes", Model.Likes)
+                        <span data-post-like-id="@Model.Id" class="lg-like-txt-post js-like-count" style="font-weight: bold"> @Localizer["likes"]</span>
                     </a>
                     &emsp;
                     <a class="icons-href">
                         <i class="fa fa-comment-o fa-2x"></i>
                     </a>
                     <a class="icons-href">
-                        <span id="cmnt_count" data-post-cmnt-id="@Model.Id" class="lg-like-txt-post js-cmnt-count" style="font-weight:bold">@Model.Comments.Count</span>
+                        @Html.Partial("_Comments", Model.Comments)
                         <span data-post-cmnt-id="@Model.Id" class="lg-like-txt-post js-cmnt-count" style="font-weight:bold"> @Localizer["comments"]</span>
-                        </a>
-     
+                    </a>
+
                     <hr>
                     <span>@Model.Created.ToLongDateString()</span>
                 </div>
@@ -62,8 +65,6 @@
         </div>
     </div>
 </div>
-
-
 
 <div class="modal fade" id="like-modal" role="dialog">
     <div class="modal-dialog modal-sm">
@@ -100,30 +101,61 @@
 </div>
 
 
+
+
 @section scripts
     {
+    <!--Add script to update the page and send messages.-->
+    <script type="text/javascript" src="~/lib/signalr/signalr.min.js"></script>
+
+    <script src="~/lib/signalr/signalr-client.min.js"></script>
+
     <script>
         $(document).ready(function () {
 
-            $('#cmnt').keydown(function (e) {
+            var hubUrl = 'http://localhost:5000/reportsPublisher';
+            var httpConnection = new signalR.HttpConnection(hubUrl);
+            var hubConnection = new signalR.HubConnection(httpConnection);
+            
+            hubConnection.on('OnAddComment', data => {
+                $("#cmnt_count").html(data);
+            });
+            hubConnection.on('OnSetLike', data => {
+                $("#likes").html(data);
+            });
+            hubConnection.on('OnSetLikeColor', data => {
+                $("#colorHH").html(data);
+            });
+
+
+
+            hubConnection.start();
+
+
+            $('#cmnt').keyup(function (e) {
                 if (e.keyCode == 13) {
                     var value = $('#cmnt').val();
                     var count = parseInt($("#cmnt_count").html());
                     $.post("/api/post/comment",
-                        {
-                            message: $("#cmnt").val(),
-                            commenterId: "@Model.User.Id",
-                            postId: "@Model.Id"
+                            {
+                                message: $("#cmnt").val(),
+                                commenterId: "@Model.User.Id",
+                                postId: "@Model.Id"
+                            })
+                        .done(function () {
+                            $('#cmnt').val("");
+                            $.get("/@Model.Id/comments/")
+                                .done(response => hubConnection.invoke('AddComment', response))
+                                .fail(() => console.log("fail"));
                         });
-                    $("#cmnt_count").html(count + 1);
-                    console.log("Press enter:" + value);
-                    $('#cmnt').val("");
+
                 }
             });
+
+
             $(".js-cmnt-count").click(function (e) {
 
-                var id = $(e.target).attr("data-post-cmnt-id");
-                $.get("/post/show/comments", { postId: id })
+                $.get("/post/show/comments", { postId: @Model.Id })
                     .done(response => {
                         $("#cmnt-modal-content").html(response);
                         $("#cmnt-modal").modal("show");
@@ -133,8 +165,7 @@
 
             $(".js-like-count").click(function (e) {
 
-                var id = $(e.target).attr("data-post-like-id");
-                $.get("/Post/GetLikers", { postId: id })
+                $.get("/Post/GetLikers", { postId: @Model.Id })
                     .done(response => {
                         $("#like-modal-content").html(response);
                         $("#like-modal").modal("show");
@@ -143,27 +174,22 @@
             });
             $(".js-like").click(function (e) {
 
-                var icon = $(e.target)
-                var id = $(icon).attr("data-post-id");
+                var icon = $(e.target);
 
-                $.post("/Post/SetLike", { postId: id })
+                $.post("/Post/SetLike", { postId: @Model.Id })
                     .done(function () {
 
-                        var count = parseInt($("#likes").html());
 
-                        if ($(icon)[0].hasAttribute("liked")) {
+                        $.get("/@Model.Id/likes/")
+                            .done(response => hubConnection.invoke('SetLike', response))
+                            .fail(() => console.log("fail"));
 
-                            $("#likes").html(count - 1);
-                            $(icon).removeAttr("liked");
-                            $(icon).removeClass("fa-heart").addClass("fa-heart-o");
-                            $(icon).removeClass("red-heart");
-                        } else {
+                        $.get("/@Model.Id/isLiked/")
+                            .done(response => hubConnection.invoke('SetLikeColor', response))
+                            .fail(() => console.log("fail"));
 
-                            $("#likes").html(count + 1);
-                            $(icon).attr("liked", "1");
-                            $(icon).removeClass("fa-heart-o").addClass("fa-heart");
-                            $(icon).addClass("red-heart");
-                        }
+
+                       
                     });
             });
         });
