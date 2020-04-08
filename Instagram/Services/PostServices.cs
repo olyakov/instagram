@@ -97,7 +97,7 @@ namespace Instagram.Services
 
         public List<Tag> ParseTags(string tags) => tags.Split(",").Select(tag => new Tag
         {
-            Title = tag
+            Title = tag.Replace(" ", string.Empty)
         }).ToList();
 
         public GalleryDetailModel GetGalleryDetailModel(Post post)

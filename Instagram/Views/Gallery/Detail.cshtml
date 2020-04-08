@@ -29,6 +29,12 @@
                 <p>
                     @Model.Description
                 </p>
+                <div>
+                    @foreach (var tag in Model.Tags)
+                    {
+                        <a asp-controller="Post" asp-action="Search" asp-route-search="@tag">#@tag</a>
+                    }
+                </div>
                 <div class="post-detail-meta">
                     <a id="colorHH" class="icons-href  js-like">
                         @Html.Partial("_HeartColor", Model.IsSetLike)

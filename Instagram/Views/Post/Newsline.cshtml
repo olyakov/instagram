@@ -43,7 +43,7 @@
                     </a>
 
                     &emsp;
-                    <a href="#" class="icons-href">
+                    <a class="icons-href">
                         <i class="fa fa-comment-o fa-2x"></i>
                     </a>
                     <a class="icons-href">
@@ -53,10 +53,16 @@
                 </div>
 
                 <div class='caption'>
-                    <a href='#'>@post.User.UserName</a><span>@post.Title</span>
+                    <a asp-route-username="@post.User.UserName" asp-controller="Gallery" asp-action="Index" class='user'>@post.User.UserName</a><span>@post.Title</span>
                 </div>
                 <div>
                     @post.Description
+                </div>
+                <div>
+                    @foreach (var tag in post.Tags)
+                    {
+                        <a asp-controller="Post" asp-action="Search" asp-route-search="@tag">#@tag</a>
+                    }
                 </div>
                 <hr />
                 <span>@post.Created.ToLongDateString()</span>
