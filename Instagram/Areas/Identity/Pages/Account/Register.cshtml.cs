@@ -67,13 +67,34 @@ namespace Instagram.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            List<string> startUrls = new List<string>()
+            {
+                "https://clck.ru/EPxyV",
+                "https://clck.ru/EPxzx",
+                "https://clck.ru/EPy2F",
+                "https://clck.ru/EPy2f",
+                "https://clck.ru/EPy3n",
+                "https://clck.ru/EPy4B",
+                "https://clck.ru/EPy4h",
+                "https://clck.ru/EPy4u",
+                "https://clck.ru/EPy5A",
+                "https://clck.ru/EPy5n",
+                "https://clck.ru/EPy69",
+                "https://clck.ru/EPy6R",
+                "https://clck.ru/EPy6m",
+                "https://clck.ru/EPy6y",
+                "https://clck.ru/EPy7a",
+                "https://clck.ru/EPy7p",
+                "https://clck.ru/EPy8B"
+            };
+
             returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
                 var url = Input.Url;
-                if (url == "" || url == null)
+                if (string.IsNullOrEmpty(url))
                 {
-                    url = "http://www.learnex.in/wp-content/uploads/2015/12/flat-faces-icons-circle-6.png";
+                    url = startUrls[new Random().Next(0, startUrls.Count)];
                 }
                 var user = new AspNetUsers { UserName = Input.Email, Email = Input.Email, Url = url};
                 var result = await _userManager.CreateAsync(user, Input.Password);

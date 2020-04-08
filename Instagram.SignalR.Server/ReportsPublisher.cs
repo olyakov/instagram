@@ -5,19 +5,19 @@ namespace Fiver.Asp.SignalR.Server
 {
     public class ReportsPublisher : Hub
     {
-        public Task PublishReport(string reportName)
+        public Task AddComment(string commentData)
         {
-            return Clients.All.InvokeAsync("OnReportPublished", reportName);
+            return Clients.All.InvokeAsync("OnAddComment", commentData);
         }
 
-        public Task SetLike(string reportName)
+        public Task SetLike(string likeData)
         {
-            return Clients.All.InvokeAsync("OnSetLike", reportName);
+            return Clients.All.InvokeAsync("OnSetLike", likeData);
         }
 
-        public Task SetLikeColor(string reportName)
+        public Task SetLikeColor(string likeColorData)
         {
-            return Clients.All.InvokeAsync("OnSetLikeColor", reportName);
+            return Clients.All.InvokeAsync("OnSetLikeColor", likeColorData);
         }
     }
 }
