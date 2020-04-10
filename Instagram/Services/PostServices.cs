@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Instagram.Services
 {
@@ -95,7 +94,7 @@ namespace Instagram.Services
             await _ctx.SaveChangesAsync();
         }
 
-        public List<Tag> ParseTags(string tags) => tags.Split(",").Select(tag => new Tag
+        public List<Tag> ParseTags(string tags) => (tags ?? "").Split(",").Select(tag => new Tag
         {
             Title = tag.Replace(" ", string.Empty)
         }).ToList();

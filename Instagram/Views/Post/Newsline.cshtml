@@ -216,13 +216,13 @@
 
                         if ($(small_heart)[0].hasAttribute("liked")) {
 
-                            $(like_id).html(count - 1 + " likes");
+                            $(like_id).html(count - 1);
                             $(small_heart).removeAttr("liked");
                             $(small_heart).removeClass("fa-heart").addClass("fa-heart-o");
                             $(small_heart).removeClass("red-heart");
                         } else {
 
-                            $(like_id).html(count + 1 + " likes");
+                            $(like_id).html(count + 1);
                             $(small_heart).attr("liked", "1");
                             $(small_heart).removeClass("fa-heart-o").addClass("fa-heart");
                             $(small_heart).addClass("red-heart");

@@ -164,7 +164,6 @@ namespace Instagram.Controllers
             return RedirectToAction("Index", "Gallery");
         }
 
-        [HttpDelete]
         [Route("/remove/{id:int}")]
         public async Task<IActionResult> RemovePost(int id)
         {
@@ -194,14 +193,10 @@ namespace Instagram.Controllers
             var post = _postService.GetById(dto.PostId);
             var user = _userService.GetUserByUsername(post.User.UserName);
 
-            var commentors = _commentService
-                .GetPostComments(dto.PostId)
-                .OrderByDescending(c => c.Created);
-
             var viewModel = new PostCommentorsViewModel()
             {
                 UserId = user.Id,
-                Comments = commentors
+                Comments = _commentService.GetPostComments(dto.PostId)
             };
 
             return PartialView("_CommentorsList", viewModel);
