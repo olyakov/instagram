@@ -7,7 +7,6 @@ using System.Linq;
 
 namespace Instagram.Controllers
 {
-
     public class FollowDto
     {
         public string FollowingId { get; set; }
