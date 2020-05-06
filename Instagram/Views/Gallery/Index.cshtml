@@ -1,0 +1,154 @@
+﻿@using Instagram.Data.Model
+@using Microsoft.AspNetCore.Identity
+@using Instagram.Controllers
+@using Microsoft.AspNetCore.Mvc.Localization
+@model Instagram.Models.GalleryIndexModel
+
+
+@inject UserManager<AspNetUsers> UserManager
+@inject IHtmlLocalizer<SharedResource> Localizer
+
+<div class="conteiner body-content">
+    <div class="rela-block profile-card">
+        <div class="profile-pic" id="profile_pic" style="background-image: url(@Model.User.Url)"></div>
+        <div class="rela-block profile-name-container">
+            <div class="rela-block user-name" id="user_name">@Model.User.UserName</div>
+
+            @if (UserManager.GetUserId(User) != Model.User.Id)
+            {
+                <button class="btn btn-link btn-sm js-follow" data-user-id="@Model.User.Id">@(Model.IsFollow ? "UnFollow" : "Follow")</button>
+            }
+
+        </div>
+        <div class="rela-block profile-card-stats">
+            <div class="floated profile-stat" id="num_works">
+                <a data-toggle="modal" data-target="#exampleModal" class="icons-href">
+                    @Model.Posts.Count()
+                </a>
+                <br>
+                <span style="color: grey">@Localizer["posts"]</span>
+            </div>
+            <div class="floated profile-stat" id="num_followers">
+                <a id="count_followers" class="icons-href">
+                    @Model.Followers.Count
+                </a>
+                <br>
+                <span style="color: grey">@Localizer["followers"]</span>
+            </div>
+            <div class="floated profile-stat" id="num_following">
+                <a id="count_followings" class="icons-href">
+                    @Model.Followings.Count
+                </a>
+                <br>
+                <span style="color: grey">@Localizer["following"]</span>
+            </div>
+        </div>
+    </div>
+    <div class="row gallery-content">
+        @foreach (var post in Model.Posts)
+        {
+
+            <div class="gallery-post-container drop-shadow post">
+                <a asp-controller="Gallery" asp-action="Detail" asp-route-id="@post.Id">
+                    <div class="overlay">
+                        <span style="background-image: none; width: 300px;">
+                            <div class="post-like-text">
+                                <i class="fa fa-heart-o fa-lg " aria-hidden="true"></i>
+                                @post.Likes.Count
+                                &emsp;
+                                <i class="fa fa-comment-o fa-lg " aria-hidden="true"></i>
+                                @post.Comments.Count
+                            </div>
+                        </span>
+                    </div>
+                    <div class="gallery-post" style="background-image: url(@post.Url)"></div>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+
+<div class="modal fade" id="follow-modal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" id="modal-title">Likes</h4>
+            </div>
+            <div class="modal-body" id="follow-modal-content" style="overflow-y: scroll; max-height:85%;">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts
+    {
+    <script>
+        $(document).ready(function () {
+            $("#count_followers").click(() => {
+                var usern = "@Model.User.UserName"
+                $.get("/Follows/GetFollowers", { username: usern})
+                    .done(response => {
+                        $("#follow-modal-content").html(response);
+                        $("#follow-modal").modal("show");
+                        $("#modal-title").text("Followers")
+                    })
+                    .fail(() => console.log("fail"));
+            });
+
+            $("#count_followings").click(() => {
+                var usern = "@Model.User.UserName"
+                $.get("/Follows/GetFollowings", { username: usern})
+                    .done(response => {
+                        $("#follow-modal-content").html(response);
+                        $("#follow-modal").modal("show");
+                        $("#modal-title").text("Followings")
+                    })
+                    .fail(() => console.log("fail"));
+            });
+
+            $(".js-follow").click(function (e) {
+
+                var button = $(e.target);
+                var id = $(button).attr("data-user-id");
+
+                $.post("/Follows/Following", { followingId: id })
+                    .done(function () {
+
+                        var count = parseInt($("#count_followers").html());
+
+                        var btn_txt = $(button).text();
+                        if (btn_txt == "Follow") {
+                            $("#count_followers").html(count + 1)
+                            button.text("UnFollow");
+                        } else {
+                            $("#count_followers").html(count - 1)
+                            button.text("Follow");
+                        }
+                    })
+                    .fail(() => console.log("fail"));
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $(".js-toggle-follow").click(function (e) {
+                var button = $(e.target);
+                $.post("/follows/add/@Model.User.Id")
+                    .done(function () {
+                        button.text("Following");
+                    })
+                    .fail(function () {
+                        alert("Something failed" + button.attr("data-user-id"));
+                    });
+            });
+        });
+    </script>
+}
+

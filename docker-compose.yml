@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  instaram:
+    build: ./
+    restart: always
+    ports:
+      - "5000:80"
+    depends_on:
+      - db
+
+  db:
+    image: microsoft/mssql-server-linux:2017-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=reallyStrongPwd123
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"

@@ -1,0 +1,188 @@
+﻿@using Instagram.Data.Model
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.Localization
+@addTagHelper "Instagram.TagHelpers.ContactsTagHelper, Instagram"
+
+@inject UserManager<AspNetUsers> UserManager
+@inject IHtmlLocalizer<SharedResource> Localizer
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Insta</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/insta.css" />
+        <link rel="stylesheet" href="~/css/profile.css" />
+        <link rel="stylesheet" href="~/css/search.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                <a asp-area="" asp-controller="Post" asp-action="Newsline" class="navbar-brand"><i class="fa fa-instagram fa-lg" style="border-radius: 5px"></i><span></span></a>
+                <a asp-area="" asp-controller="Gallery" asp-action="Index" class="navbar-brand"> Instagram</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                @if (this.User.IsInRole("Admin"))
+                {
+                    <ul class="nav navbar-nav">
+                        <li><a asp-area="" asp-controller="Admin" asp-action="Reports" class="navbar-brand">Reports</a></li>
+                    </ul>
+                }
+                <partial name="_LoginPartial" />
+                <ul class="nav navbar-nav navbar-right">
+
+                    <form asp-controller="Post" asp-action="Search"
+                          method="get" class="search-form">
+                        <div class="form-group has-feedback">
+                            <label for="search" class="sr-only">Search</label>
+                            <input type="text" class="form-control" name="search" id="search" placeholder="Search...">
+                            <span type="submit" class="glyphicon glyphicon-search form-control-feedback"></span>
+                        </div>
+                    </form>
+
+                </ul>
+
+
+            </div>
+        </div>
+    </nav>
+    @if (UserManager.GetUserName(User) != null)
+    {
+        <div class='lil-bar'>
+            <div class='bar-cont'>
+                <a asp-area="" asp-controller="Post" asp-action="Upload" title="@Localizer["Add new post"]"><i class="fa fa-plus"></i></a>
+                <a href="#" onclick='return false;' class='list-order' role="button" title="@Localizer["Info account"]"><i class="fa fa-ellipsis-h"></i></a>
+            </div>
+        </div>
+
+        <div class="list">
+            <ul>
+                <li>
+                    <a asp-route-username="@UserManager.GetUserName(User)" asp-controller="Gallery" asp-action="Index">
+                        <img src='@UserManager.GetUserAsync(User).Result.Url'>
+                        @UserManager.GetUserName(User)
+                    </a>
+                </li>
+                <li><a asp-area="" asp-controller="Post" asp-action="Newsline">@Localizer["News"]</a></li>
+                <li><a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@Localizer["Edit profile"]</a></li>
+                <li><a href="javascript:document.getElementById('logoutForm').submit()">@Localizer["Log off"]</a></li>
+                <li class='collapse'><a href='#'>Collapse the bar</a></li>
+            </ul>
+        </div>
+    }
+
+
+    <partial name="_CookieConsentPartial" />
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <div class="col-md-3">
+            <footer>
+                <p>&copy; 2018 - Instagram</p>
+                <contacts></contacts>
+            </footer>
+        </div>
+        <div class="col-md-4">
+            <div class="text-right" style="width: 60%">
+                @await Html.PartialAsync("_SelectLanguagePartial")
+            </div>
+        </div>
+        
+    </div>
+
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+<script>
+
+    $(function () {
+        $(window).on('scroll resize', function holy_nob() {
+            var wh = $(window).height();
+            var wt = $(window).scrollTop();
+            var wb = (wt + wh);
+            var rbj = $('.lil-bar');
+            var ft = $('.footer-cont');
+            var ft_h = ft.height();
+            var tof = (ft_h);
+            var fol = (ft_h + 15);
+            if (wb >= tof) {
+                rbj.css('bottom', fol);
+            } else {
+                rbj.css('bottom', '15px');
+            }
+            $('.fade-scroll').each(function () {
+                var element = $(this);
+                var el_h = element.height();
+                var el_t = element.offset().top;
+                var el_b = (el_t + el_h);
+                if ((el_b > wt) && (el_t < wb)) {
+                    element.addClass('animation');
+                }
+                else {
+                    element.removeClass('animation');
+                }
+                if (wt > el_t) {
+                    element.css('opacity', 1 - (wt - el_t) / 850);
+                }
+                if (wt > 10) {
+                    $('.navbar').addClass('navfar').find('span').addClass('mini')
+                    $('.fa-instagram').addClass('bisc');
+                }
+
+                else {
+                    $('.navbar').removeClass('navfar');
+                    $('.navbar span').removeClass('mini');
+                    $('.fa-instagram').removeClass('bisc');
+                }
+            });
+        });
+        $('.list-order, .collapse').on('click', function () {
+            $('.list').toggleClass('animate');
+            $('.list-order').toggleClass('ba');
+        });
+        $("a[href='#']").click(function (e) {
+            e.preventDefault();
+        });
+    });
+</script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,13 @@
+﻿@model Instagram.Models.AdminReportsViewModel
+<div>
+    <form asp-action="DeleteUser" asp-route-username="@Model.User.UserName" asp-controller="Admin" method="post" class="alert-link">
+        <div class='top-insta'>
+            <a asp-route-username="@Model.User.UserName" asp-controller="Gallery" asp-action="Index"><img src=@Model.User.Url></a>
+            <a asp-route-username="@Model.User.UserName" asp-controller="Gallery" asp-action="Index" class='user'>@Model.User.UserName</a>
+
+            <button type="submit" class="btn btn-danger" style="margin-left: 5%">Delete</button>
+            <span class="admin-panel-pading">Reports count: @Model.Reports.Count()</span>
+
+        </div>
+    </form>
+</div>

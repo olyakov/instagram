@@ -1,0 +1,9 @@
+﻿@model Instagram.Models.AdminReportsViewModel
+
+<div style="margin-top: 20px ">
+    @foreach (var user in Model.Users)
+    {
+        @await Component.InvokeAsync("ReportList", new { username = user.UserName })
+    }
+</div>
+

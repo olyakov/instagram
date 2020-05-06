@@ -1,0 +1,11 @@
+﻿@model PostUserViewModel
+
+
+@foreach (var user in Model.Users)
+ {
+     <div class='top-insta'>
+         <a asp-route-username="@user" asp-controller="Gallery" asp-action="Index"><img src=@user.Url></a>
+         <a asp-route-username="@user.UserName" asp-controller="Gallery" asp-action="Index" class='user'>@user.UserName</a>
+         <span class='dot'></span>
+     </div>
+ }

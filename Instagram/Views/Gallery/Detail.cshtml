@@ -1,0 +1,203 @@
+﻿@using Instagram.Controllers
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.CodeAnalysis.CSharp.Syntax
+
+@model Instagram.Models.GalleryDetailModel
+@inject IHtmlLocalizer<SharedResource> Localizer
+
+
+<div class="container body-content">
+    <div class="row">
+        <div class="col col-sm-7">
+            <div class="row post-detail-cotainer">
+
+                <div class="post-detail">
+                    <img class="post-img" src="@Model.Url" alt="@Model.Title" />
+                </div>
+            </div>
+        </div>
+        <div class="col col-sm-5">
+            <div class="row">
+                <h2>@Model.Title</h2>
+                <a class="icons-href" asp-route-id="@Model.Id" asp-controller="Post" asp-action="RemovePost">
+                    <i class="fa fa-trash-o fa-2x"></i>
+                </a>
+                <a class="icons-href" asp-route-id="@Model.Id" asp-controller="Post" asp-action="Edit">
+                    <i class="fa fa-edit fa-2x"></i>
+                </a>
+                <hr>
+                <p>
+                    @Model.Description
+                </p>
+                <div>
+                    @foreach (var tag in Model.Tags)
+                    {
+                        <a asp-controller="Post" asp-action="Search" asp-route-search="@tag">#@tag</a>
+                    }
+                </div>
+                <div class="post-detail-meta">
+                    <a id="colorHH" class="icons-href  js-like">
+                        @Html.Partial("_HeartColor", Model.IsSetLike)
+                    </a>
+
+                    <a class="icons-href">
+                        @Html.Partial("_Likes", Model.Likes)
+                        <span data-post-like-id="@Model.Id" class="lg-like-txt-post js-like-count" style="font-weight: bold"> @Localizer["likes"]</span>
+                    </a>
+                    &emsp;
+                    <a class="icons-href">
+                        <i class="fa fa-comment-o fa-2x"></i>
+                    </a>
+                    <a class="icons-href">
+                        @Html.Partial("_Comments", Model.Comments)
+                        <span data-post-cmnt-id="@Model.Id" class="lg-like-txt-post js-cmnt-count" style="font-weight:bold"> @Localizer["comments"]</span>
+                    </a>
+
+                    <hr>
+                    <span>@Model.Created.ToLongDateString()</span>
+                </div>
+                <hr />
+                <div class='comment-section'>
+                    <input type='text' id='cmnt' placeholder='@Localizer["Add comment"]...'>
+                    <span class='dot02'></span>
+                </div>
+                <div class="row controls" style="padding: 10px">
+                    <a class="btn btn-primary" asp-controller="Gallery" asp-action="Index">
+                        @Localizer["Back to all"]
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="like-modal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Localizer["Modal Likes"]</h4>
+            </div>
+            <div class="modal-body" id="like-modal-content">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="cmnt-modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@Localizer["Modal Comments"]</h4>
+            </div>
+            <div class="modal-body" id="cmnt-modal-content" style="max-height: 80%">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">@Localizer["Close"]</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section scripts
+    {
+    <!--Add script to update the page and send messages.-->
+    <script type="text/javascript" src="~/lib/signalr/signalr.min.js"></script>
+
+    <script src="~/lib/signalr/signalr-client.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            var hubUrl = 'http://localhost:5000/reportsPublisher';
+            var httpConnection = new signalR.HttpConnection(hubUrl);
+            var hubConnection = new signalR.HubConnection(httpConnection);
+            
+            hubConnection.on('OnAddComment', data => {
+                $("#cmnt_count").html(data);
+            });
+            hubConnection.on('OnSetLike', data => {
+                $("#likes").html(data);
+            });
+            hubConnection.on('OnSetLikeColor', data => {
+                $("#colorHH").html(data);
+            });
+
+
+
+            hubConnection.start();
+
+
+            $('#cmnt').keyup(function (e) {
+                if (e.keyCode == 13) {
+                    var value = $('#cmnt').val();
+                    var count = parseInt($("#cmnt_count").html());
+                    $.post("/api/post/comment",
+                            {
+                                message: $("#cmnt").val(),
+                                commenterId: "@Model.User.Id",
+                                postId: "@Model.Id"
+                            })
+                        .done(function () {
+                            $('#cmnt').val("");
+                            $.get("/@Model.Id/comments/")
+                                .done(response => hubConnection.invoke('AddComment', response))
+                                .fail(() => console.log("fail"));
+                        });
+
+                }
+            });
+
+
+            $(".js-cmnt-count").click(function (e) {
+
+                $.get("/post/show/comments", { postId: @Model.Id })
+                    .done(response => {
+                        $("#cmnt-modal-content").html(response);
+                        $("#cmnt-modal").modal("show");
+                    })
+                    .fail(() => console.log("Fail"));
+            });
+
+            $(".js-like-count").click(function (e) {
+
+                $.get("/Post/GetLikers", { postId: @Model.Id })
+                    .done(response => {
+                        $("#like-modal-content").html(response);
+                        $("#like-modal").modal("show");
+                    })
+                    .fail(() => console.log("Fail"));
+            });
+            $(".js-like").click(function (e) {
+
+                var icon = $(e.target);
+
+                $.post("/Post/SetLike", { postId: @Model.Id })
+                    .done(function () {
+
+
+                        $.get("/@Model.Id/likes/")
+                            .done(response => hubConnection.invoke('SetLike', response))
+                            .fail(() => console.log("fail"));
+
+                        $.get("/@Model.Id/isLiked/")
+                            .done(response => hubConnection.invoke('SetLikeColor', response))
+                            .fail(() => console.log("fail"));
+
+
+                       
+                    });
+            });
+        });
+    </script>
+}

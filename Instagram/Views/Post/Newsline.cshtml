@@ -1,0 +1,234 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@model Instagram.Models.GalleryIndexModel
+
+@inject IHtmlLocalizer<SharedResource> Localizer
+
+<section>
+    @foreach (var post in Model.Posts)
+    {
+        <div class='insta fade-scroll'>
+            <div class='top-insta'>
+                <a asp-route-username="@post.User.UserName" asp-controller="Gallery" asp-action="Index"><img src=@post.User.Url></a>
+                <a asp-route-username="@post.User.UserName" asp-controller="Gallery" asp-action="Index" class='user'>@post.User.UserName</a>
+
+                <div class="dropdown drop-menu-report">
+                    <a class="icons-href" data-toggle="dropdown">
+                        <span class="fa fa-ellipsis-v"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="icons-href js-report" data-post-id="@post.Id">@Localizer["Report this post"]</a></li>
+                    </ul>
+                </div>
+
+
+            </div>
+            <div class='post'>
+                <div class="overlay">
+                    <a>
+                        <span data-post-id="@post.Id" class="js-big-heart">
+                        </span>
+                    </a>
+                </div>
+                <img src='@post.Url'>
+            </div>
+            <div class='footer'>
+
+                <div class='react'>
+                    <a class="icons-href">
+                        <i data-post-id="@post.Id" id="@("heart"+post.Id)" class="fa @(post.IsSetLike ? "fa-heart" : "fa-heart-o") fa-2x @(post.IsSetLike ? "red-heart" : "") js-like" @(post.IsSetLike ? "liked" : "") aria-hidden="true"></i>
+                    </a>
+                    <a class="icons-href">
+                        <span id="@("like"+post.Id)" data-post-like-id="@post.Id" class="lg-like-txt-post js-like-count" style="font-weight:bold">@post.Likes.Count</span>
+                        <span data-post-like-id="@post.Id" class="lg-like-txt-post js-like-count" style="font-weight:bold"> @Localizer["likes"]</span>
+                    </a>
+
+                    &emsp;
+                    <a class="icons-href">
+                        <i class="fa fa-comment-o fa-2x"></i>
+                    </a>
+                    <a class="icons-href">
+                        <span id="@("cmnt-count"+post.Id)" data-post-cmnt-id="@post.Id" class="lg-like-txt-post js-cmnt-count" style="font-weight:bold">@post.Comments.Count</span>
+                        <span data-post-cmnt-id="@post.Id" class="lg-like-txt-post js-cmnt-count" style="font-weight:bold"> @Localizer["comments"]</span>
+                    </a>
+                </div>
+
+                <div class='caption'>
+                    <a asp-route-username="@post.User.UserName" asp-controller="Gallery" asp-action="Index" class='user'>@post.User.UserName</a><span>@post.Title</span>
+                </div>
+                <div>
+                    @post.Description
+                </div>
+                <div>
+                    @foreach (var tag in post.Tags)
+                    {
+                        <a asp-controller="Post" asp-action="Search" asp-route-search="@tag">#@tag</a>
+                    }
+                </div>
+                <hr />
+                <span>@post.Created.ToLongDateString()</span>
+                <div class='comment-section'>
+                    <input type='text' id="cmnt" data-post-cmnt-id="@post.Id" class="js-cmnt" placeholder='@Localizer["Add comment"]...'>
+                    <span class='dot02'>
+                    </span>
+                </div>
+
+            </div> <!-- end Footer -->
+        </div> <!-- end Insta -->
+
+        <div class="modal fade" id="@("like-modal"+post.Id)" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" id="modal-title">@Localizer["Modal Likes"]</h4>
+                    </div>
+                    <div class="modal-body" id="@("like-modal-content"+post.Id)" style="overflow-y: scroll; max-height:85%;">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">@Localizer["Close"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="@("cmnt-modal"+post.Id)" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">@Localizer["Modal Comments"]</h4>
+                    </div>
+                    <div class="modal-body" id="@("cmnt-modal-content"+post.Id)">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">@Localizer["Close"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</section>
+
+
+
+@section scripts
+    {
+    <script>
+        $(document).ready(function () {
+
+            $(".js-report").click(function (e) {
+
+                var id = $(e.target).attr("data-post-id");
+
+                $.post("/post/report", { postId: id })
+                    .done(function () {
+                        console.log("done");
+                    });
+            });
+
+            $('.js-cmnt').keydown(function (e) {
+                if (e.keyCode == 13) {
+
+                    var id = $(e.target).attr("data-post-cmnt-id");
+                    var cmnt = $(e.target);
+
+                    var cmnt_id = ("#" + "cmnt-count" + id);
+                    var cmnt_count = parseInt($(cmnt_id).html());
+                    var value = $(cmnt_id).val();
+
+                    $.post("/api/post/comment",
+                        {
+                            message: $(cmnt).val(),
+                            commenterId: "@Model.User.Id",
+                            postId: id
+                        });
+
+                    $(cmnt_id).html(cmnt_count + 1);
+                    console.log("Press enter:" + value);
+                    $(cmnt).val("");
+                }
+            });
+
+            $(".js-cmnt-count").click(function (e) {
+
+                var id = $(e.target).attr("data-post-cmnt-id");
+                $.get("/post/show/comments", { postId: id })
+                    .done(response => {
+                        var modal_id = ("#" + "cmnt-modal" + id);
+                        var modal_content = ("#" + "cmnt-modal-content" + id);
+                        $(modal_content).html(response);
+                        $(modal_id).modal("show");
+                    })
+                    .fail(() => console.log("Kak tak"));
+            });
+
+            $(".js-like-count").click(function (e) {
+
+                var id = $(e.target).attr("data-post-like-id");
+                $.get("/Post/GetLikers", { postId: id })
+                    .done(response => {
+                        var modal_id = ("#" + "like-modal" + id);
+                        var modal_content = ("#" + "like-modal-content" + id);
+                        $(modal_content).html(response);
+                        $(modal_id).modal("show");
+                    })
+                    .fail(() => console.log("Kak tak"));
+            });
+            $(".js-like").click(function (e) {
+
+                var icon = $(e.target);
+                var id = $(icon).attr("data-post-id");
+
+                $.post("/Post/SetLike", { postId: id })
+                    .done(function () {
+
+                        var like_id = ("#" + "like" + id);
+                        var count = parseInt($(like_id).html());
+
+                        if ($(icon)[0].hasAttribute("liked")) {
+
+                            $(like_id).html(count - 1);
+                            $(icon).removeAttr("liked");
+                            $(icon).removeClass("fa-heart").addClass("fa-heart-o");
+                            $(icon).removeClass("red-heart");
+                        } else {
+
+                            $(like_id).html(count + 1);
+                            $(icon).attr("liked", "1");
+                            $(icon).removeClass("fa-heart-o").addClass("fa-heart");
+                            $(icon).addClass("red-heart");
+                        }
+                    });
+            });
+            $(".js-big-heart").click(function (e) {
+
+                var big_heart = $(e.target);
+                var id = $(big_heart).attr("data-post-id");
+
+                $.post("/Post/SetLike", { postId: id })
+                    .done(function () {
+
+                        var like_id = ("#" + "like" + id);
+                        var count = parseInt($(like_id).html());
+                        var small_heart = ('#' + "heart" + id);
+
+                        if ($(small_heart)[0].hasAttribute("liked")) {
+
+                            $(like_id).html(count - 1);
+                            $(small_heart).removeAttr("liked");
+                            $(small_heart).removeClass("fa-heart").addClass("fa-heart-o");
+                            $(small_heart).removeClass("red-heart");
+                        } else {
+
+                            $(like_id).html(count + 1);
+                            $(small_heart).attr("liked", "1");
+                            $(small_heart).removeClass("fa-heart-o").addClass("fa-heart");
+                            $(small_heart).addClass("red-heart");
+                        }
+                    });
+            });
+        });
+    </script>
+}

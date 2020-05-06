@@ -1,0 +1,17 @@
+﻿@model PostCommentorsViewModel
+
+
+@foreach (var comment in Model.Comments)
+{
+    var username = @comment.User.UserName;
+    <div class='top-insta' style="padding-left: 0px ">
+        <a asp-route-username="@username" asp-controller="Gallery" asp-action="Index"><img src='@comment.User.Url'></a>
+        <a asp-route-username="@username" asp-controller="Gallery" asp-action="Index" class='user'>@username</a>
+
+        
+
+    </div>
+    <span class="isDisabled" style="font-weight: lighter">@comment.Content</span>
+    <span>&emsp;@comment.Created.ToString("dd MMM, HH:mm tt")</span>
+    <hr/>
+}
